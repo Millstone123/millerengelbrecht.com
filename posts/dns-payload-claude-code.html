@@ -85,7 +85,14 @@
       <p>
         The repository contained no malicious code. Every file in it is individually
         boring and passes review. The payload that actually ran never lived in the
-        repo at all. It lived in a DNS record.
+        repo at all. It lived in a <span class="glossary" tabindex="0">DNS record<span class="glossary-pop" role="note">
+          <span class="gloss-title">DNS record</span>
+          DNS, the Domain Name System, is the internet's address book: it turns names like
+          <code>example.com</code> into the numbers machines connect to. A lookup returns small
+          records. An A record holds an IP address; a TXT record can hold any short string,
+          read with one query like <code>dig TXT name</code>. Because that value is fetched live
+          over the network, it never has to sit in the repository. That gap is what this attack abuses.
+        </span></span>.
       </p>
 
       <hr>

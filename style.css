@@ -724,6 +724,72 @@ a { text-decoration: none; color: inherit; }
   line-height: 1.75;
 }
 
+/* ─── GLOSSARY TOOLTIP ─── */
+.glossary {
+  position: relative;
+  color: var(--accent-2);
+  font-weight: 500;
+  border-bottom: 1px dashed rgba(110,231,255,0.55);
+  cursor: help;
+  outline: none;
+}
+
+.glossary:hover,
+.glossary:focus { border-bottom-color: var(--accent-2); }
+
+.glossary-pop {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  width: min(360px, 80vw);
+  padding: 15px 17px;
+  background: #0c2138;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.62;
+  color: var(--body);
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 40;
+}
+
+.glossary-pop::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-bottom-color: #0c2138;
+}
+
+.gloss-title {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--ember-2);
+  margin-bottom: 7px;
+}
+
+.glossary:hover .glossary-pop,
+.glossary:focus .glossary-pop,
+.glossary:focus-within .glossary-pop {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* ─── TERMINAL ─── */
 .terminal {
   background: #060f1b;
