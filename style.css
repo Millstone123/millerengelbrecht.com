@@ -196,6 +196,21 @@ a { text-decoration: none; color: inherit; }
 
 .hero-text { min-width: 0; }
 
+/* centered variant: emblem sits in the middle of the heading, above the name */
+.hero-content.hero-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+}
+
+.hero-centered .hero-emblem { margin-bottom: 26px; }
+.hero-centered .hero-emblem img { max-width: 152px; }
+.hero-centered .hero-text { display: flex; flex-direction: column; align-items: center; }
+.hero-centered .hero-bio { margin-left: auto; margin-right: auto; }
+.hero-centered .stats-strip { margin-left: auto; margin-right: auto; }
+
 .hero-emblem {
   position: relative;
   display: flex;
@@ -893,8 +908,6 @@ a { text-decoration: none; color: inherit; }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 860px) {
-  .hero-content { grid-template-columns: 1fr; gap: 0; }
-  .hero-emblem { display: none; }
   .submissions-list { grid-template-columns: 1fr; }
 }
 
