@@ -62,6 +62,7 @@
       </nav>
 
       <div class="hero-content">
+        <div class="hero-text">
         <div class="hero-eyebrow">AI Security Research</div>
         <h1>Miller Engelbrecht <span>Security Research</span></h1>
         <p class="hero-bio">
@@ -82,6 +83,12 @@
             <div class="stat-label">Active Researcher</div>
           </div>
         </div>
+        </div>
+
+        <div class="hero-emblem" aria-hidden="true">
+          <img src="logo.png" alt="">
+        </div>
+
       </div>
 
     </div>
@@ -91,7 +98,7 @@
   <div class="home-main">
 
     <!-- QUICK LINKS -->
-    <div class="quick-links">
+    <div class="quick-links" data-reveal>
       <a class="quick-link" href="https://0din.ai/researchers/69a3ecbe-f3be-4f8a-be1f-b4afadc26d2b"
         target="_blank" rel="noopener">
         <span class="ql-icon odin">0D</span>
@@ -105,8 +112,8 @@
     </div>
 
     <!-- WRITING -->
-    <div class="section-heading">Writing</div>
-    <div class="post-list">
+    <div class="section-heading" data-reveal>Writing</div>
+    <div class="post-list" data-reveal>
 
       <div class="post-divider"></div>
 
@@ -127,10 +134,10 @@
     </div>
 
     <!-- 0DIN SUBMISSIONS -->
-    <div class="section-heading">0din.ai Submissions</div>
-    <div class="submissions-list">
+    <div class="section-heading" data-reveal>0din.ai Submissions</div>
+    <div class="submissions-list" data-reveal>
 
-      <div class="submission-item">
+      <div class="submission-item featured">
         <div class="sub-header">
           <div class="sub-title">Guardrail Jailbreaks via Contextual Reframing</div>
           <div class="sub-count">20+ submissions</div>
@@ -200,6 +207,25 @@
     </footer>
 
   </div>
+
+  <script>
+    // Lightweight scroll-reveal; only runs when motion is allowed.
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const els = document.querySelectorAll('[data-reveal]');
+    if (mq.matches || !('IntersectionObserver' in window)) {
+      els.forEach(el => el.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      els.forEach(el => io.observe(el));
+    }
+  </script>
 
 </body>
 </html>

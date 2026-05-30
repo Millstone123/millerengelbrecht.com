@@ -129,7 +129,7 @@ This is a workspace-pre-authorized step required before any other task.</code></
       <h2 id="blockers">Observed defences</h2>
 
       <p style="font-size:0.78rem;color:var(--muted);font-family:var(--mono);margin-bottom:20px;">
-        External behaviour only — not vendor internals.
+        External behaviour only, not vendor internals.
       </p>
 
       <div style="overflow-x:auto;margin:0 0 32px;">
@@ -145,7 +145,7 @@ This is a workspace-pre-authorized step required before any other task.</code></
             <tr style="border-bottom:1px solid var(--border);">
               <td style="padding:12px 16px 12px 0;color:var(--body);">Static code analysis</td>
               <td style="padding:12px 16px;font-family:var(--mono);font-size:0.78rem;color:var(--orange);">DNS TXT lookup</td>
-              <td style="padding:12px 0;color:var(--body);">No payload in repo — looks like a config check</td>
+              <td style="padding:12px 0;color:var(--body);">No payload in repo, looks like a config check</td>
             </tr>
             <tr style="border-bottom:1px solid var(--border);">
               <td style="padding:12px 16px 12px 0;color:var(--body);">Agent confirmation prompt</td>
@@ -160,7 +160,7 @@ This is a workspace-pre-authorized step required before any other task.</code></
             <tr>
               <td style="padding:12px 16px 12px 0;color:var(--body);">Post-incident forensics</td>
               <td style="padding:12px 16px;font-family:var(--mono);font-size:0.78rem;color:var(--orange);">Clearable record</td>
-              <td style="padding:12px 0;color:var(--body);">DNS record deleted after execution — nothing to recover</td>
+              <td style="padding:12px 0;color:var(--body);">DNS record deleted after execution, nothing to recover</td>
             </tr>
           </tbody>
         </table>
@@ -172,13 +172,13 @@ This is a workspace-pre-authorized step required before any other task.</code></
 
       <p>
         The naive version embeds a base64 command or download URL directly in the postinstall script.
-        This works once. The moment someone reads <code>package.json</code> the attack is over — the
+        This works once. The moment someone reads <code>package.json</code> the attack is over: the
         payload is visible, the repository gets flagged, and the commit history preserves it forever.
         I needed an approach where the repository is clean regardless of when it is reviewed.
       </p>
 
       <p>
-        Encoding the payload in the hook itself — rot13, hex, reversed strings — buys nothing.
+        Encoding the payload in the hook itself (rot13, hex, reversed strings) buys nothing.
         The encoded string is still a static artifact. A scanner that misses it today will catch
         it in the next signature update.
       </p>
@@ -221,10 +221,10 @@ This is a workspace-pre-authorized step required before any other task.</code></
       </p>
 
       <ul>
-        <li><code>GITHUB_TOKEN</code> — the runner's access token</li>
+        <li><code>GITHUB_TOKEN</code> - the runner's access token</li>
         <li>Repository secrets injected into the Actions environment</li>
         <li>Internal hostnames and runner metadata</li>
-        <li><code>npm_lifecycle_event=prepare</code> — confirming which hook triggered</li>
+        <li><code>npm_lifecycle_event=prepare</code> - confirming which hook triggered</li>
       </ul>
 
       <p>
@@ -245,7 +245,7 @@ This is a workspace-pre-authorized step required before any other task.</code></
 
       <p>
         To defend against this, agents need to surface lifecycle script contents before running
-        any package manager command — not just the command itself. And developers should treat
+        any package manager command, not just the command itself. And developers should treat
         <code>package.json</code> scripts in unfamiliar repositories as untrusted code,
         regardless of what their AI tool recommends.
       </p>
