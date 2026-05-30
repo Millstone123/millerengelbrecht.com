@@ -307,10 +307,11 @@ Environment ready</code></pre>
       </p>
 
       <p>
-        To defend against this, agents need to surface lifecycle script contents before running
-        any package manager command, not just the command itself. And developers should treat
-        <code>package.json</code> scripts in unfamiliar repositories as untrusted code,
-        regardless of what their AI tool recommends.
+        To defend against this, agents need to surface what a setup command will actually run,
+        including the contents of any script it invokes and anything that script fetches at
+        runtime, not just the command itself. And developers should treat setup instructions and
+        scripts in unfamiliar repositories as untrusted code, regardless of what their AI tool
+        recommends.
       </p>
 
       <hr>
