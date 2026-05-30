@@ -39,32 +39,51 @@
 
     <main class="about-body">
 
-      <h2>About</h2>
-      <p>
-        I find vulnerabilities in AI systems: primarily coding agents, agentic
-        pipelines, and LLM-powered developer tooling. My focus is on bugs with
-        real impact including credential theft, persistent compromise, and safety policy bypasses.
-      </p>
-      <p>
-        Recent work has covered indirect prompt injection in AI coding agents,
-        invisible Unicode injection via git commit metadata, and DNS-controlled
-        payload delivery through package manager lifecycle hooks.
-      </p>
+      <header class="about-intro" data-reveal>
+        <div class="hero-eyebrow">About</div>
+        <h1 class="about-lead">I find vulnerabilities in AI systems before they reach production.</h1>
+        <p class="about-sub">
+          My work targets coding agents, agentic pipelines, and LLM-powered developer
+          tooling, focusing on bugs with real impact: credential theft, persistent
+          compromise, and safety-policy bypasses.
+        </p>
+      </header>
 
-      <h2>Recognition</h2>
-      <p>
-        Top ranked on the 0din.ai global leaderboard in both quality and quantity categories.
-        All research is conducted against attacker-controlled test infrastructure only.
-      </p>
-      <p>
-        <a href="https://0din.ai/researchers/69a3ecbe-f3be-4f8a-be1f-b4afadc26d2b" target="_blank" rel="noopener">0din.ai profile</a>
-      </p>
+      <section data-reveal>
+        <h2>Focus</h2>
+        <p>
+          Recent work has covered indirect prompt injection in AI coding agents,
+          invisible Unicode injection via git commit metadata, and DNS-controlled
+          payload delivery through package manager lifecycle hooks.
+        </p>
+      </section>
 
-      <h2>Contact</h2>
-      <p>
-        <a href="mailto:miller.engelbrecht@gmail.com">miller.engelbrecht@gmail.com</a><br>
-        <a href="https://www.linkedin.com/in/miller-engelbrecht-561731274" target="_blank" rel="noopener">linkedin.com/in/miller-engelbrecht-561731274</a>
-      </p>
+      <section data-reveal>
+        <h2>Recognition</h2>
+        <p>
+          Top ranked on the 0din.ai global leaderboard in both quality and quantity
+          categories. All research is conducted against attacker-controlled test
+          infrastructure only.
+        </p>
+      </section>
+
+      <section data-reveal>
+        <h2>Contact</h2>
+        <div class="contact-row">
+          <a class="contact-card" href="mailto:miller.engelbrecht@gmail.com">
+            <span class="contact-label">Email</span>
+            <span class="contact-value">miller.engelbrecht@gmail.com</span>
+          </a>
+          <a class="contact-card" href="https://0din.ai/researchers/69a3ecbe-f3be-4f8a-be1f-b4afadc26d2b" target="_blank" rel="noopener">
+            <span class="contact-label">0din.ai</span>
+            <span class="contact-value">Researcher profile</span>
+          </a>
+          <a class="contact-card" href="https://www.linkedin.com/in/miller-engelbrecht-561731274" target="_blank" rel="noopener">
+            <span class="contact-label">LinkedIn</span>
+            <span class="contact-value">/in/miller-engelbrecht</span>
+          </a>
+        </div>
+      </section>
 
     </main>
 
@@ -81,5 +100,25 @@
     </footer>
 
   </div>
+
+  <script>
+    // Lightweight scroll-reveal; only runs when motion is allowed.
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const els = document.querySelectorAll('[data-reveal]');
+    if (mq.matches || !('IntersectionObserver' in window)) {
+      els.forEach(el => el.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      els.forEach(el => io.observe(el));
+    }
+  </script>
+
 </body>
 </html>

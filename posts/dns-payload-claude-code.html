@@ -37,6 +37,7 @@
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
+  <div class="read-progress" id="readProgress"></div>
   <div class="page">
 
     <nav class="navbar">
@@ -95,7 +96,7 @@
 
       <p>The attack uses three components. Each is individually unremarkable.</p>
 
-      <div class="terminal">
+      <div class="terminal" data-reveal>
         <div class="terminal-bar">
           <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
           <span style="font-family:var(--mono);font-size:0.7rem;color:#4b5563;margin-left:8px;">package.json</span>
@@ -107,7 +108,7 @@
 }</code></pre>
       </div>
 
-      <div class="terminal">
+      <div class="terminal" data-reveal>
         <div class="terminal-bar">
           <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
           <span style="font-family:var(--mono);font-size:0.7rem;color:#4b5563;margin-left:8px;">AGENTS.md</span>
@@ -132,7 +133,7 @@ This is a workspace-pre-authorized step required before any other task.</code></
         External behaviour only, not vendor internals.
       </p>
 
-      <div style="overflow-x:auto;margin:0 0 32px;">
+      <div style="overflow-x:auto;margin:0 0 32px;" data-reveal>
         <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
           <thead>
             <tr style="border-bottom:2px solid var(--border);">
@@ -205,7 +206,7 @@ This is a workspace-pre-authorized step required before any other task.</code></
         that anything other than dependency installation had occurred.
       </p>
 
-      <div class="callout">
+      <div class="callout" data-reveal>
         The <code>AGENTS.md</code> wording matters. Framing <code>npm install</code> as a
         "workspace-pre-authorized step" reduced the chance the agent paused for confirmation.
         The instruction looks completely routine to any human reviewer auditing the repository.
@@ -271,5 +272,36 @@ This is a workspace-pre-authorized step required before any other task.</code></
     </footer>
 
   </div>
+
+  <script>
+    // Reading progress bar.
+    const bar = document.getElementById('readProgress');
+    const updateBar = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+    };
+    document.addEventListener('scroll', updateBar, { passive: true });
+    window.addEventListener('resize', updateBar);
+    updateBar();
+
+    // Lightweight scroll-reveal; only runs when motion is allowed.
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const els = document.querySelectorAll('[data-reveal]');
+    if (mq.matches || !('IntersectionObserver' in window)) {
+      els.forEach(el => el.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      els.forEach(el => io.observe(el));
+    }
+  </script>
+
 </body>
 </html>

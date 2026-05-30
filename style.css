@@ -779,6 +779,63 @@ a { text-decoration: none; color: inherit; }
 /* ─── ABOUT PAGE ─── */
 .about-body { padding: 48px 0 80px; }
 
+.about-intro { margin-bottom: 12px; }
+
+.about-lead {
+  font-size: clamp(1.9rem, 4.4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: #fff;
+  max-width: 600px;
+  margin: 6px 0 18px;
+  text-wrap: balance;
+}
+
+.about-intro .about-sub {
+  font-size: 1.05rem;
+  color: var(--body);
+  line-height: 1.75;
+  max-width: 560px;
+}
+
+.contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 190px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color 0.2s, transform 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.contact-card:hover {
+  border-color: var(--border-strong);
+  background: var(--surface2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.contact-label {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ember-2);
+}
+
+.contact-value { font-size: 0.9rem; color: var(--text); }
+
 .about-body h2 {
   display: flex;
   align-items: center;
@@ -811,6 +868,18 @@ a { text-decoration: none; color: inherit; }
 
 .about-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(74,163,255,0.4); }
 .about-body a:hover { text-decoration-color: var(--accent); }
+
+/* ─── READING PROGRESS BAR (article pages) ─── */
+.read-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, var(--ember), var(--accent-2));
+  z-index: 50;
+  transition: width 0.1s linear;
+}
 
 /* ─── SCROLL REVEAL (motion only when allowed) ─── */
 @media (prefers-reduced-motion: no-preference) {
