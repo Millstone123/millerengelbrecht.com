@@ -92,19 +92,16 @@ a { text-decoration: none; color: inherit; }
 }
 
 .nav-logo {
-  height: 46px;
-  width: 46px;
-  object-fit: contain;
+  height: 44px;
+  width: auto;
   flex-shrink: 0;
-  border-radius: 11px;
-  border: 1px solid var(--border-strong);
-  box-shadow: 0 10px 26px rgba(2,8,20,0.45), 0 0 0 3px rgba(74,163,255,0.05);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  filter: drop-shadow(0 6px 14px rgba(2,8,20,0.5));
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 
 .nav-brand:hover .nav-logo {
   transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(2,8,20,0.5), 0 0 0 3px rgba(110,231,255,0.12);
+  filter: drop-shadow(0 8px 18px rgba(110,231,255,0.28));
 }
 
 .nav-name {
@@ -546,12 +543,9 @@ a { text-decoration: none; color: inherit; }
 .footer-left { display: flex; align-items: center; gap: 11px; }
 
 .footer-logo {
-  height: 36px;
-  width: 36px;
-  object-fit: contain;
-  border-radius: 9px;
-  border: 1px solid var(--border-strong);
-  box-shadow: 0 8px 18px rgba(2,8,20,0.4);
+  height: 34px;
+  width: auto;
+  filter: drop-shadow(0 5px 12px rgba(2,8,20,0.45));
 }
 
 .footer-name { font-size: 0.82rem; font-weight: 600; color: var(--text); }
@@ -822,7 +816,7 @@ a { text-decoration: none; color: inherit; }
   .stat-number { font-size: 1.4rem; }
   .stat-card { padding: 16px 18px; }
   .navbar { padding: 16px 0; }
-  .nav-logo { height: 40px; width: 40px; }
+  .nav-logo { height: 38px; width: auto; }
   .nav-links a.linkedin span { display: none; }
   .post-title { font-size: 1.6rem; }
   .site-footer { flex-direction: column; align-items: flex-start; gap: 14px; }
