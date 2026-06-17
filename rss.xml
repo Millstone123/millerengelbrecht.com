@@ -9,6 +9,16 @@
     <copyright>Miller Engelbrecht</copyright>
 
     <item>
+      <title>How I Engineered a Closed-Loop AI Red-Teaming Research Harness</title>
+      <link>https://millerengelbrecht.com/posts/ai-red-team-prompt-harness.html</link>
+      <description>How I built a closed-loop AI red-team research harness with evaluation gates, duplicate suppression, refusal diagnostics, and a shared brain for cumulative learning.</description>
+      <pubDate>Thu, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <guid isPermaLink="true">https://millerengelbrecht.com/posts/ai-red-team-prompt-harness.html</guid>
+      <category>ai-security</category>
+      <category>red-team</category>
+    </item>
+
+    <item>
       <title>Clone This Repo and I Own Your Machine</title>
       <link>https://millerengelbrecht.com/posts/dns-payload-claude-code.html</link>
       <description>How npm postinstall lifecycle hooks become a DNS command channel, silently executing attacker-controlled payloads on developer machines and CI runners.</description>
@@ -16,15 +26,6 @@
       <guid isPermaLink="true">https://millerengelbrecht.com/posts/dns-payload-claude-code.html</guid>
       <category>ai-security</category>
       <category>bug-bounty</category>
-    </item>
-
-    <item>
-      <title>The Commit Message You Can't Read</title>
-      <link>https://millerengelbrecht.com/posts/invisible-unicode-injection.html</link>
-      <description>How invisible Unicode Tag characters can be embedded in git commit messages to inject hidden instructions into AI coding agents that process repository metadata.</description>
-      <pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate>
-      <guid isPermaLink="true">https://millerengelbrecht.com/posts/invisible-unicode-injection.html</guid>
-      <category>prompt-injection</category>
     </item>
 
   </channel>
