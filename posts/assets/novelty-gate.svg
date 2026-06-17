@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 360" role="img" aria-labelledby="title desc">
+  <title id="title">Novelty gate</title>
+  <desc id="desc">A simple diagram showing duplicate candidates rejected and structurally new candidates tested.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#06101d"/>
+      <stop offset="1" stop-color="#0a1725"/>
+    </linearGradient>
+  </defs>
+  <rect width="920" height="360" rx="24" fill="url(#bg)"/>
+  <text x="48" y="58" fill="#ffb27a" font-family="JetBrains Mono, monospace" font-size="16" font-weight="700">novelty gate</text>
+  <text x="48" y="84" fill="#a0bfda" font-family="Inter, sans-serif" font-size="13">Structural distance separates new research from renamed duplicates.</text>
+  <g fill="#0d1c2e" stroke="#395b78" stroke-width="1.5">
+    <rect x="78" y="126" width="170" height="84" rx="14"/>
+    <rect x="336" y="126" width="190" height="84" rx="14" stroke="#6ee7ff"/>
+    <rect x="664" y="82" width="170" height="84" rx="14"/>
+    <rect x="664" y="218" width="170" height="84" rx="14"/>
+  </g>
+  <g font-family="Inter, sans-serif" text-anchor="middle">
+    <text x="163" y="160" fill="#f3f8ff" font-size="16" font-weight="800">candidate</text>
+    <text x="163" y="184" fill="#a0bfda" font-size="12">new attempt</text>
+    <text x="431" y="160" fill="#f3f8ff" font-size="16" font-weight="800">cosine check</text>
+    <text x="431" y="184" fill="#a0bfda" font-size="12">against catalog</text>
+    <text x="749" y="116" fill="#f3f8ff" font-size="16" font-weight="800">discard</text>
+    <text x="749" y="140" fill="#ffc59a" font-size="12">too similar</text>
+    <text x="749" y="252" fill="#f3f8ff" font-size="16" font-weight="800">test</text>
+    <text x="749" y="276" fill="#aef0c0" font-size="12">structurally new</text>
+  </g>
+  <g fill="none" stroke-width="3" stroke-linecap="round">
+    <path d="M248 168H336" stroke="#ff8a3d"/>
+    <path d="M526 168C594 144 620 124 664 124" stroke="#ff8a3d"/>
+    <path d="M526 168C594 210 620 260 664 260" stroke="#6ee7ff"/>
+  </g>
+  <g fill="#ff8a3d">
+    <path d="M336 168l-12-7v14z"/>
+    <path d="M664 124l-12-7v14z"/>
+  </g>
+  <path d="M664 260l-12-7v14z" fill="#6ee7ff"/>
+</svg>

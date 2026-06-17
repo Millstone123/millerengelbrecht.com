@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430" role="img" aria-labelledby="title desc">
+  <title id="title">Controlled listener receives inbound shell</title>
+  <desc id="desc">A simplified terminal view showing a controlled listener receiving an inbound shell connection with network details redacted.</desc>
+  <defs>
+    <style>
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .label{font-family:Inter,Arial,sans-serif}
+      .cmd{font-size:23px;fill:#f8fafc}
+      .muted{fill:#94a3b8;font-size:18px}
+      .green{fill:#34d399}
+    </style>
+  </defs>
+  <rect width="1100" height="430" rx="18" fill="#111827"/>
+  <rect x="32" y="32" width="1036" height="366" rx="12" fill="#050a14" stroke="#334155"/>
+  <circle cx="64" cy="64" r="7" fill="#fb7185"/>
+  <circle cx="86" cy="64" r="7" fill="#facc15"/>
+  <circle cx="108" cy="64" r="7" fill="#34d399"/>
+  <text x="136" y="71" class="label" font-size="17" fill="#cbd5e1">controlled listener</text>
+
+  <text x="64" y="134" class="mono cmd">root@host:~# listener --port &lt;redacted&gt;</text>
+  <text x="64" y="176" class="mono muted">Listening on 0.0.0.0 &lt;port&gt;</text>
+  <text x="64" y="218" class="mono" font-size="22" fill="#34d399">Connection received from &lt;developer-machine&gt;</text>
+  <text x="64" y="260" class="mono muted">interactive shell attached</text>
+  <text x="64" y="318" class="mono cmd">shell$ <tspan fill="#94a3b8">whoami</tspan></text>
+
+  <rect x="720" y="128" width="284" height="164" rx="10" fill="#052e16" stroke="#16a34a"/>
+  <circle cx="756" cy="178" r="9" class="green"/>
+  <text x="782" y="184" class="label" font-size="21" font-weight="700" fill="#bbf7d0">callback confirmed</text>
+  <text x="756" y="229" class="label" font-size="18" fill="#dcfce7">No live host or payload</text>
+  <text x="756" y="258" class="label" font-size="18" fill="#dcfce7">is shown in this image.</text>
+</svg>

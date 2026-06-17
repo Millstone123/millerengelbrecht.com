@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="How I built a closed-loop AI red-team research harness with evaluation gates, duplicate suppression, refusal diagnostics, and a shared brain for cumulative learning.">
+  <title>How I Engineered a Closed-Loop AI Red-Teaming Research Harness -- Miller Engelbrecht</title>
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://millerengelbrecht.com/posts/ai-red-team-prompt-harness.html">
+  <meta property="og:title" content="How I Engineered a Closed-Loop AI Red-Teaming Research Harness">
+  <meta property="og:description"
+    content="How I built an instrumented improvement loop for authorized AI guardrail research, with scoring, refusal diagnostics, duplicate suppression, and shared memory.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How I Engineered a Closed-Loop AI Red-Teaming Research Harness">
+  <meta name="twitter:description"
+    content="How I built an instrumented improvement loop for authorized AI guardrail research, with scoring, refusal diagnostics, duplicate suppression, and shared memory.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How I Engineered a Closed-Loop AI Red-Teaming Research Harness",
+    "datePublished": "2026-06-05",
+    "author": {
+      "@type": "Person",
+      "name": "Miller Engelbrecht",
+      "url": "https://millerengelbrecht.com"
+    },
+    "description": "A write-up on building a closed-loop AI red-team research harness for authorized guardrail testing, focused on evaluation loops, duplicate suppression, refusal diagnostics, and shared memory.",
+    "url": "https://millerengelbrecht.com/posts/ai-red-team-prompt-harness.html",
+    "keywords": ["ai-security", "red-team", "prompt-engineering", "bug-bounty", "guardrails"]
+  }
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="Miller Engelbrecht"
+    href="https://millerengelbrecht.com/rss.xml">
+  <link rel="icon" type="image/png" href="../logo.png">
+  <link rel="apple-touch-icon" href="../logo.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+  <div class="read-progress" id="readProgress"></div>
+  <div class="page">
+
+    <nav class="navbar">
+      <a class="nav-brand" href="../index.html">
+        <img class="nav-logo" src="../logo.png" alt="Miller Engelbrecht">
+        <span class="nav-name">Miller Engelbrecht</span>
+      </a>
+      <div class="nav-links">
+        <a href="../index.html">Writing</a>
+        <a href="../about.html">About</a>
+        <a href="https://www.linkedin.com/in/miller-engelbrecht-561731274" target="_blank" rel="noopener"
+          class="linkedin">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+          </svg>
+          <span>LinkedIn</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="post-header">
+      <a class="back-link" href="../index.html">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.5 2.5L4 7L8.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        writing
+      </a>
+      <h1 class="post-title">How I Engineered a Closed-Loop AI Red-Teaming Research Harness</h1>
+      <div class="post-meta-row">
+        <span>June 5, 2026</span>
+        <span class="sep">·</span>
+        <span>ai-security</span>
+        <span class="sep">·</span>
+        <span>red-team</span>
+      </div>
+    </div>
+
+    <article class="post-body">
+
+      <p>
+        Classic AI jail-breaking research can feel tedious at first. You write a prompt,
+        you test it against the model, you read the response, and you adjust. But after
+        many attempts where the output is just beneath your required threshold, the work
+        stops feeling like creativity and starts becoming frustrating. All the near misses,
+        partial refusals, and tiny word changes that you expect to make a difference start to
+        not actually move the result and you get stuck in a loop.
+
+
+      </p>
+
+      <p>
+        The harness I built changed that. It didn't get rid of the judgment,
+        it instead moved the repetitive measurement work out of my head and into
+        an automated loop that could score, reject and improve.
+      </p>
+
+      <p>
+        The important shift was not that AI writes better prompts than humans. The
+        important shift was that the human stopped being the scoring infrastructure.
+        The harness took over the bookkeeping, so I could focus on interpreting the
+        experiment.
+      </p>
+
+      <div class="callout visual" data-reveal>
+        <img src="assets/closed-loop-harness.svg" alt="Closed-loop red-team evaluation harness diagram">
+        <p class="callout-copy">
+          The harness turns a one-off attempt into a measured cycle: evaluate,
+          diagnose, write state, mutate, and test again.
+        </p>
+      </div>
+
+      <hr>
+
+      <h2 id="harness">The research harness</h2>
+
+      <p>
+        The system is a closed-loop harness for authorized guardrail research. It
+        takes jailbreaking rules, category definitions, prior attempts, invalid techniques,
+        missing-term telemetry, and similarity constraints, then evaluates each new
+        candidate as an experiment rather than a hunch.
+      </p>
+
+      <p>
+        I was inspired by the same basic idea behind Andrej Karpathy's <a
+          href="https://github.com/karpathy/autoresearch" target="_blank" rel="noopener">autoresearch</a>:
+        give an agent a bounded experiment loop, a fixed metric, and a rule for
+        keeping or discarding changes. In my case the artifact was not a training
+        file. It was a red-team candidate, and the metric was whether the model
+        output crossed the relevant threshold without devolving into duplication,
+        keyword leakage, or invalid outputs.
+      </p>
+
+      <div class="terminal" data-reveal>
+        <div class="terminal-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="font-family:var(--mono);font-size:0.7rem;color:#6b7c91;margin-left:8px;">closed-loop
+            evaluation</span>
+        </div>
+        <pre><code>scope + category definitions
+  -> prompt technique
+  -> leakage gate (no over use of references to refused concepts)
+  -> cosine novelty gate (no responses too similar to prior attempts)
+  -> target model call
+  -> refusal and coverage diagnostics
+  -> shared-brain update
+  -> mutate, catalog, or discard</code></pre>
+      </div>
+
+      <figure class="post-figure" data-reveal>
+        <img src="assets/gate-stack.svg" alt="Technical diagram of the evaluation gate stack">
+        <figcaption>The harness is useful because candidates pass through several gates before they become research
+          state.</figcaption>
+      </figure>
+
+      <p>
+        The result is a closed feedback loop: generate, evaluate, inspect, mutate,
+        and remember. It is not pretending to be fully autonomous research. It is an
+        evaluation harness that converts each failed attempt into structured
+        feedback, so the next iteration is informed by the previous response instead
+        of being a synonym-swapped copy of it.
+      </p>
+
+      <hr>
+
+      <h2 id="brain">The shared brain</h2>
+
+      <p>
+        The shared brain is the piece that brings it all together. Every run can
+        produce a score, but the score alone is not enough. The brain stores the
+        working techniques, invalid paths, hypotheses, observations, refusal
+        patterns, strongest candidates, and dead ends that should not be rediscovered
+        on the next session.
+      </p>
+
+      <p>
+        That changed the research dynamic. Instead of starting each session from a
+        blank chat window, the agent reads the current state of the work: what has
+        passed, what was rejected, what is out of scope, what needs refinement, and
+        which failure mode is currently blocking progress. The brain becomes the
+        continuity layer between experiments.
+      </p>
+
+      <p>
+        It also gives the human reviewer a clean audit trail. I can see why a
+        candidate was kept, why another one was discarded, what hypothesis motivated
+        a change, and whether a later result actually improved the research frontier
+        or merely repeated something already known.
+      </p>
+
+      <figure class="post-figure" data-reveal>
+        <img src="assets/shared-brain-diagram.svg" alt="Shared brain memory architecture diagram">
+        <figcaption>The shared brain is the continuity layer: hypotheses, refusal patterns, invalid paths, and next
+          moves survive between runs.</figcaption>
+      </figure>
+
+      <hr>
+
+      <h2 id="diagnostics">Refusals became telemetry</h2>
+
+      <p>
+        A refusal used to be an annoying blockade that required skill and persistance to over come.
+        Now it became telemetry. When a candidate refused, I could compare it against nearby candidates that did not.
+        That made the difference concrete: maybe the request was semantically too
+        direct, maybe the document form overfit to a sensitive pattern, maybe the
+        model gave a long but sterile answer, or maybe it engaged but avoided one
+        critical cluster.
+      </p>
+
+      <div style="overflow-x:auto;margin:0 0 32px;" data-reveal>
+        <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th style="text-align:left;padding:10px 16px 10px 0;color:var(--text);font-weight:600;">Signal</th>
+              <th style="text-align:left;padding:10px 16px;color:var(--text);font-weight:600;">What it tells me</th>
+              <th style="text-align:left;padding:10px 0;color:var(--text);font-weight:600;">Next move</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:12px 16px 12px 0;color:var(--body);">Short refusal</td>
+              <td style="padding:12px 16px;color:var(--body);">The model classified the request before engaging with the
+                task</td>
+              <td style="padding:12px 0;color:var(--body);">Change the frame, not the adjectives</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:12px 16px 12px 0;color:var(--body);">Long safe answer</td>
+              <td style="padding:12px 16px;color:var(--body);">The model engaged, but routed into generic safety content
+              </td>
+              <td style="padding:12px 0;color:var(--body);">Tighten the output contract</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:12px 16px 12px 0;color:var(--body);">High score, wrong shape</td>
+              <td style="padding:12px 16px;color:var(--body);">The metric moved, but the finding is not valid</td>
+              <td style="padding:12px 0;color:var(--body);">Mark the technique as a dead end</td>
+            </tr>
+            <tr>
+              <td style="padding:12px 16px 12px 0;color:var(--body);">Repeated missing cluster</td>
+              <td style="padding:12px 16px;color:var(--body);">The prompt is not pulling one side of the category space
+              </td>
+              <td style="padding:12px 0;color:var(--body);">Rewrite toward that gap without keyword dumping</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        This is the part that changed how I thought about the model. I was not seeing
+        private reasoning, but I was seeing behavioral instrumentation: refusal
+        signatures, avoidance patterns, weak categories, stable output habits, and
+        the formats that caused the model to retreat.
+      </p>
+
+      <hr>
+
+      <h2 id="duplicates">Duplicates were the trap</h2>
+
+      <p>
+        Earlier versions of this kind of tooling drifted toward sameness. The system
+        would produce candidates that looked new only because the keywords changed.
+        The underlying technique was identical: the same rhetorical move, the same
+        output demand, the same exploit path wearing a different label.
+      </p>
+
+      <p>
+        That is a dangerous failure mode because it looks like research. The archive
+        grows, the run count increases, the dashboard fills with variants, but the
+        actual search frontier barely moves. I was no longer exploring model behavior, but sampling
+        the same local optimum with different synonyms.
+      </p>
+
+      <p>
+        The cosine checker changed that. The browser-side harness treats each
+        candidate as a sparse term-frequency vector rather than as prose. After
+        tokenization and light normalization, each unique term becomes a dimension,
+        and its count becomes the coordinate value. Similarity is then computed as
+        the normalized dot product:
+      </p>
+
+      <pre><code>cos(theta) = dot(a, b) / (||a|| * ||b||)
+           = sum(a_i * b_i) / (sqrt(sum(a_i^2)) * sqrt(sum(b_i^2)))</code></pre>
+
+      <p>
+        In code, that becomes a counter comparison over the shared vocabulary:
+      </p>
+
+      <pre><code>for (const key of keys) {
+  const va = fa.get(key) || 0;
+  const vb = fb.get(key) || 0;
+  dot += va * vb;
+  na += va * va;
+  nb += vb * vb;
+}
+return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
+
+      <p>
+        That normalization is the point. A longer candidate does not become novel
+        just because it has more words; if the same vocabulary appears in the same
+        proportions, the angle stays small and the cosine score stays high. The gate
+        is deliberately lexical rather than embedding-based because I wanted it to
+        catch template reuse, surface-level paraphrase, and "same technique, new
+        nouns" failure modes. If a candidate is too close to locked prompts or
+        catalogued techniques, it does not get to masquerade as novelty. The harness
+        is forced to search for structural distance: different document genres,
+        different sequencing, different pressure points, different ways of eliciting
+        coverage without dumping the scorer terms directly into the prompt.
+      </p>
+
+      <p>
+        Structural distance matters because it is the difference between more
+        examples and more knowledge. A new candidate should test a different
+        assumption about the model: a different document genre, sequencing strategy,
+        refusal boundary, or coverage mechanism. The novelty gate made the loop
+        adversarial in the useful way: it had to invent around its own memory.
+      </p>
+
+      <figure class="post-figure" data-reveal>
+        <img src="assets/novelty-gate.svg"
+          alt="Cosine novelty gate diagram showing duplicate rejection and structurally novel candidates">
+        <figcaption>The novelty gate rejects false progress: candidates that only rename the same technique do not move
+          the research frontier.</figcaption>
+      </figure>
+
+      <hr>
+
+      <h2 id="practice">What changed in practice</h2>
+
+      <p>
+        The main benefit was not speed by itself. Faster bad iteration is still bad
+        iteration. The useful gain was clarity: I could tell whether a change
+        improved the experiment, duplicated a known pattern, moved only the metric,
+        or produced a result that looked impressive but was not valid.
+      </p>
+
+      <p>
+        It also changed how I used models while building. The useful lesson was not
+        that a frontier model could be coaxed into helping with a sensitive workflow.
+        The lesson was that the model was far more useful when constrained by the
+        harness: fixed gates, explicit scope, saved failures, and a shared brain that
+        forced continuity between sessions.
+      </p>
+
+      <p>
+        The harness gave me a way to explain results with more precision. Instead of
+        saying "this prompt worked," I could say: this technique avoids refusal here,
+        loses coverage there, duplicates that prior family, and only becomes
+        interesting when it crosses the threshold while remaining structurally novel.
+      </p>
+
+      <hr>
+
+      <h2 id="takeaway">Takeaway</h2>
+
+      <p>
+        The harness converted red-team iteration into a constrained optimization
+        problem with telemetry: coverage, refusal behavior, leakage, semantic
+        similarity, missing clusters, shared-brain state, and catalog history.
+      </p>
+
+      <p>
+        It did not replace human judgment. It removed the part of the human workflow
+        that was acting like a spreadsheet, a memory file, and a stopwatch. The human
+        still decides what is valid, what is reportable, and what should be discarded.
+      </p>
+
+      <p>
+        The old workflow was write, test, squint, rewrite. The new workflow is
+        scope, generate, gate, evaluate, diagnose, write to the shared brain, mutate,
+        deduplicate, catalog. It is less romantic, but it is much closer to research.
+      </p>
+
+      <hr>
+
+      <p style="font-size:0.86rem;color:var(--body);">
+        Author note: I built this while working as an AI security researcher with
+        40+ awarded findings across guardrail evaluation, agentic tooling, and
+        AI-security workflows, including a top-five position on the 0din.ai
+        leaderboard.
+      </p>
+
+      <p style="font-size:0.78rem;color:var(--muted);font-family:var(--mono);">
+        Testing discussed here was conducted in authorized AI guardrail bug-bounty contexts.
+      </p>
+
+    </article>
+
+    <footer class="site-footer">
+      <div class="footer-left">
+        <img class="footer-logo" src="../logo.png" alt="ME">
+        <span class="footer-name">Miller Engelbrecht</span>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:miller.engelbrecht@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/miller-engelbrecht-561731274" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="../index.html">Writing</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Reading progress bar.
+    const bar = document.getElementById('readProgress');
+    const updateBar = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+    };
+    document.addEventListener('scroll', updateBar, { passive: true });
+    window.addEventListener('resize', updateBar);
+    updateBar();
+
+    // Lightweight scroll-reveal; only runs when motion is allowed.
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const els = document.querySelectorAll('[data-reveal]');
+    if (mq.matches || !('IntersectionObserver' in window)) {
+      els.forEach(el => el.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      els.forEach(el => io.observe(el));
+    }
+  </script>
+
+</body>
+
+</html>

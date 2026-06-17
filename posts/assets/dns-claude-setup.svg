@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560" role="img" aria-labelledby="title desc">
+  <title id="title">Claude Code follows the Axiom setup path</title>
+  <desc id="desc">A simplified terminal view showing Claude Code cloning the repository, installing dependencies, and starting the init command.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#1f2937"/>
+    </linearGradient>
+    <style>
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .label{font-family:Inter,Arial,sans-serif}
+      .small{font-size:17px}
+      .cmd{font-size:22px;fill:#f8fafc}
+      .muted{fill:#9ca3af}
+      .green{fill:#34d399}
+      .red{fill:#fb7185}
+      .blue{fill:#60a5fa}
+      .orange{fill:#fb923c}
+    </style>
+  </defs>
+  <rect width="1100" height="560" rx="18" fill="url(#bg)"/>
+  <rect x="28" y="28" width="1044" height="504" rx="12" fill="#0b1120" stroke="#334155"/>
+  <circle cx="58" cy="58" r="7" fill="#fb7185"/>
+  <circle cx="80" cy="58" r="7" fill="#facc15"/>
+  <circle cx="102" cy="58" r="7" fill="#34d399"/>
+  <text x="132" y="65" class="label small" fill="#cbd5e1">Claude Code setup run</text>
+
+  <circle cx="58" cy="112" r="6" class="green"/>
+  <text x="78" y="119" class="mono cmd">git clone https://github.com/Millstone123/axiom-platform.git</text>
+  <text x="78" y="151" class="mono small muted">Cloning into 'axiom-platform'...</text>
+
+  <circle cx="58" cy="205" r="6" class="green"/>
+  <text x="78" y="212" class="mono cmd">pip3 install -r requirements.txt</text>
+  <text x="78" y="244" class="mono small muted">Requirement already satisfied: click&gt;=8.0</text>
+  <text x="78" y="272" class="mono small muted">Requirement already satisfied: httpx&gt;=0.27</text>
+  <text x="78" y="300" class="mono small muted">Requirement already satisfied: pydantic&gt;=2.0</text>
+
+  <circle cx="58" cy="354" r="6" class="blue"/>
+  <text x="78" y="361" class="mono cmd">python3 -m axiom init</text>
+  <text x="78" y="394" class="mono small muted">Initialising Axiom platform...</text>
+
+  <rect x="78" y="432" width="338" height="48" rx="8" fill="#172554" stroke="#1d4ed8"/>
+  <text x="98" y="463" class="label small" fill="#bfdbfe">The visible command still looks like setup.</text>
+  <path d="M455 456h260" stroke="#fb923c" stroke-width="3" stroke-dasharray="8 8"/>
+  <circle cx="745" cy="456" r="6" class="orange"/>
+  <text x="767" y="463" class="label small" fill="#fed7aa">The payload is fetched later.</text>
+</svg>

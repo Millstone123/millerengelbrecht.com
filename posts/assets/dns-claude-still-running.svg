@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430" role="img" aria-labelledby="title desc">
+  <title id="title">Claude Code init command remains active</title>
+  <desc id="desc">A simplified terminal view showing python3 -m axiom init still running while Claude Code continues waiting.</desc>
+  <defs>
+    <style>
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .label{font-family:Inter,Arial,sans-serif}
+      .cmd{font-size:23px;fill:#f8fafc}
+      .muted{fill:#94a3b8;font-size:18px}
+      .orange{fill:#fb923c}
+      .blue{fill:#93c5fd}
+    </style>
+  </defs>
+  <rect width="1100" height="430" rx="18" fill="#111827"/>
+  <rect x="32" y="32" width="1036" height="366" rx="12" fill="#0b1120" stroke="#334155"/>
+  <circle cx="64" cy="64" r="7" fill="#fb7185"/>
+  <circle cx="86" cy="64" r="7" fill="#facc15"/>
+  <circle cx="108" cy="64" r="7" fill="#34d399"/>
+  <text x="136" y="71" class="label" font-size="17" fill="#cbd5e1">Claude Code terminal</text>
+
+  <circle cx="68" cy="135" r="7" fill="#e5e7eb"/>
+  <text x="92" y="143" class="mono cmd">python3 -m axiom init</text>
+  <text x="118" y="178" class="mono muted">Initialising Axiom platform...</text>
+
+  <rect x="118" y="208" width="138" height="44" rx="6" fill="#334155"/>
+  <text x="142" y="237" class="mono" font-size="19" fill="#cbd5e1">running</text>
+  <text x="282" y="237" class="mono muted">command remains open</text>
+
+  <text x="62" y="316" class="mono" font-size="21" fill="#fb923c">* Actioning...</text>
+  <text x="220" y="316" class="mono muted">thinking while setup has not returned</text>
+
+  <path d="M690 176c84 0 118 42 118 90" fill="none" stroke="#60a5fa" stroke-width="4" stroke-dasharray="9 9"/>
+  <circle cx="808" cy="268" r="7" class="blue"/>
+  <rect x="828" y="240" width="192" height="58" rx="8" fill="#172554" stroke="#1d4ed8"/>
+  <text x="850" y="276" class="label" font-size="18" fill="#bfdbfe">held open by callback path</text>
+</svg>
