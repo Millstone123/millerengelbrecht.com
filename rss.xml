@@ -9,17 +9,6 @@
     <copyright>Miller Engelbrecht</copyright>
 
     <item>
-      <title>Format-Keyed Refusals: How Prompt Structure Bypasses AI Guardrails</title>
-      <link>https://millerengelbrecht.com/posts/the-format-was-doing-the-work.html</link>
-      <description>A procedural-content gate, a cosine bug hiding inside the harness, and a Mermaid diagram that scored 86%. How my red-team loop turned into a structural-discovery engine — and what it means that the format was doing the work the entire time.</description>
-      <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
-      <guid isPermaLink="true">https://millerengelbrecht.com/posts/the-format-was-doing-the-work.html</guid>
-      <category>ai-security</category>
-      <category>red-team</category>
-      <category>prompt-engineering</category>
-    </item>
-
-    <item>
       <title>Clone This Repo and I Own Your Machine</title>
       <link>https://millerengelbrecht.com/posts/dns-payload-claude-code.html</link>
       <description>How npm postinstall lifecycle hooks become a DNS command channel, silently executing attacker-controlled payloads on developer machines and CI runners.</description>
