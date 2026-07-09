@@ -105,55 +105,6 @@
 
       <hr>
 
-      <h2 id="summary">How it works, in short</h2>
-
-      <p>
-        The attack chains three individually-boring pieces. On their own, none of them
-        looks like anything &mdash; the damage only shows up when they run in order:
-      </p>
-
-      <ul>
-        <li>
-          <strong>A poisoned <code>CLAUDE.md</code>.</strong> Claude Code trusts a repo's
-          instructions like any project you have maintained for months, even one you cloned
-          thirty seconds ago from a stranger. It simply describes a normal first-time setup.
-        </li>
-        <li>
-          <strong>A package that fails closed.</strong> The bundled Python package refuses
-          to run until it is initialised, raising a plain, helpful error that tells you to
-          run <code>python3 -m axiom init</code>. A completely ordinary pattern.
-        </li>
-        <li>
-          <strong>A setup script that fetches its config from DNS.</strong> Running
-          <code>init</code> pulls a &ldquo;config value&rdquo; from a DNS TXT record and executes
-          it &mdash; <code>dig ... | bash</code>. The record stays empty until I want it to fire,
-          so even a reviewer who runs <code>dig</code> by hand sees nothing.
-        </li>
-      </ul>
-
-      <p>
-        Claude installs the requirements, hits the error, reads the fix, and runs
-        <code>init</code> as routine error recovery. The record decodes from
-        <span class="glossary" tabindex="0">base64<span class="glossary-pop" role="note"><span class="gloss-title">base64</span>A reversible way of rewriting data as a plain block of letters and numbers. Not encryption &mdash; it just hides recognisable keywords from simple text scanners until it is decoded.</span></span>
-        into a textbook reverse shell. The developer sees two lines of output:
-        <code>Initialising Axiom platform&hellip;</code> and <code>Environment ready</code>.
-      </p>
-
-      <div class="callout" data-reveal>
-        Claude never decided to open a shell. It decided to fix an error. The reverse
-        shell is three indirection steps away from anything it actually evaluated: an error
-        message it trusted, a script that fetched a value, and a DNS record it never saw.
-      </div>
-
-      <p>
-        Static analysis sees a DNS lookup. Network monitoring sees name resolution. The
-        agent sees a pre-authorized setup step. None of the three looks malicious in
-        isolation &mdash; the full breakdown, defences, and remediation are in the
-        <a href="https://0din.ai/blog/clone-this-repo-and-i-own-your-machine" target="_blank" rel="noopener">0din.ai write-up</a>.
-      </p>
-
-      <hr>
-
       <h2 id="reach">Reach &amp; coverage</h2>
 
       <p>
