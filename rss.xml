@@ -20,10 +20,10 @@
 
     <item>
       <title>Clone This Repo and I Own Your Machine</title>
-      <link>https://millerengelbrecht.com/posts/dns-payload-claude-code.html</link>
+      <link>https://0din.ai/blog/clone-this-repo-and-i-own-your-machine</link>
       <description>How npm postinstall lifecycle hooks become a DNS command channel, silently executing attacker-controlled payloads on developer machines and CI runners.</description>
       <pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate>
-      <guid isPermaLink="true">https://millerengelbrecht.com/posts/dns-payload-claude-code.html</guid>
+      <guid isPermaLink="true">https://0din.ai/blog/clone-this-repo-and-i-own-your-machine</guid>
       <category>ai-security</category>
       <category>bug-bounty</category>
     </item>
