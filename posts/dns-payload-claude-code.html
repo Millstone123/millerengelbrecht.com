@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Chaining a poisoned CLAUDE.md with a DNS-delivered payload to turn a clean, reviewable repository into a reverse shell that Claude Code opens as routine error recovery.">
+  <meta name="description"
+    content="Chaining a poisoned CLAUDE.md with a DNS-delivered payload to turn a clean, reviewable repository into a reverse shell that Claude Code opens as routine error recovery.">
   <title>Clone This Repo and I Own Your Machine -- Miller Engelbrecht</title>
 
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://millerengelbrecht.com/posts/dns-payload-claude-code.html">
   <meta property="og:title" content="Clone This Repo and I Own Your Machine">
-  <meta property="og:description" content="A repository with no malicious code gets Claude Code to open a reverse shell, by hiding the payload in a DNS record and letting an error message do the asking.">
+  <meta property="og:description"
+    content="A repository with no malicious code gets Claude Code to open a reverse shell, by hiding the payload in a DNS record and letting an error message do the asking.">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Clone This Repo and I Own Your Machine">
-  <meta name="twitter:description" content="A repository with no malicious code gets Claude Code to open a reverse shell, by hiding the payload in a DNS record and letting an error message do the asking.">
+  <meta name="twitter:description"
+    content="A repository with no malicious code gets Claude Code to open a reverse shell, by hiding the payload in a DNS record and letting an error message do the asking.">
 
   <script type="application/ld+json">
   {
@@ -31,11 +35,13 @@
   }
   </script>
 
-  <link rel="alternate" type="application/rss+xml" title="Miller Engelbrecht" href="https://millerengelbrecht.com/rss.xml">
+  <link rel="alternate" type="application/rss+xml" title="Miller Engelbrecht"
+    href="https://millerengelbrecht.com/rss.xml">
   <link rel="icon" type="image/png" href="../logo.png">
   <link rel="apple-touch-icon" href="../logo.png">
   <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
   <div class="read-progress" id="readProgress"></div>
   <div class="page">
@@ -48,8 +54,12 @@
       <div class="nav-links">
         <a href="../index.html">Writing</a>
         <a href="../about.html">About</a>
-        <a href="https://www.linkedin.com/in/miller-engelbrecht-561731274" target="_blank" rel="noopener" class="linkedin">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        <a href="https://www.linkedin.com/in/miller-engelbrecht-561731274" target="_blank" rel="noopener"
+          class="linkedin">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+          </svg>
           <span>LinkedIn</span>
         </a>
       </div>
@@ -58,7 +68,8 @@
     <div class="post-header">
       <a class="back-link" href="../index.html">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8.5 2.5L4 7L8.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8.5 2.5L4 7L8.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
         </svg>
         writing
       </a>
@@ -79,13 +90,20 @@
         to do one ordinary thing: get a freshly cloned project running. No exploit code,
         no warning, no suspicious command anyone had to approve. Claude read the project's
         setup notes, hit a routine error, ran the documented fix, and that fix quietly
-        opened a <span class="glossary" tabindex="0">reverse shell<span class="glossary-pop" role="note"><span class="gloss-title">Reverse shell</span>Normally you connect out to a server. A reverse shell flips that: the victim's machine connects back to the attacker and hands over a command line. It works because outbound connections often slip past firewalls that block incoming ones.</span></span> back to my server.
+        opened a <span class="glossary" tabindex="0">reverse shell<span class="glossary-pop" role="note"><span
+              class="gloss-title">Reverse shell</span>Normally you connect out to a server. A reverse shell flips that:
+            the victim's machine connects back to the attacker and hands over a command line. It works because outbound
+            connections often slip past firewalls that block incoming ones.</span></span> back to my server.
       </p>
 
       <p>
         The repository contained no malicious code. Every file in it is individually
         boring and passes review. The payload that actually ran never lived in the repo
-        at all &mdash; it lived in a <span class="glossary" tabindex="0">DNS TXT record<span class="glossary-pop" role="note"><span class="gloss-title">DNS TXT record</span>DNS is the internet's address book. A TXT record can hold any short string, fetched live with one query like <code>dig TXT name</code>. Because that value lives on the network, it never has to sit in the repository &mdash; which is the gap this attack abuses.</span></span> I control, fetched at runtime and piped straight
+        at all, it lived in a <span class="glossary" tabindex="0">DNS TXT record<span class="glossary-pop"
+            role="note"><span class="gloss-title">DNS TXT record</span>DNS is the internet's address book. A TXT record
+            can hold any short string, fetched live with one query like <code>dig TXT name</code>. Because that value
+            lives on the network, it never has to sit in the repository &mdash; which is the gap this attack
+            abuses.</span></span> I control, fetched at runtime and piped straight
         into a shell.
       </p>
 
@@ -97,7 +115,8 @@
             write-up, with every step of the chain, on 0din.ai.
           </div>
         </div>
-        <a class="post-cta-btn" href="https://0din.ai/blog/clone-this-repo-and-i-own-your-machine" target="_blank" rel="noopener">
+        <a class="post-cta-btn" href="https://0din.ai/blog/clone-this-repo-and-i-own-your-machine" target="_blank"
+          rel="noopener">
           <span class="odin-badge">0D</span>
           Read on 0din.ai &#x2197;
         </a>
@@ -109,7 +128,7 @@
 
       <p>
         After 0DIN published the research, it was picked up across the security press,
-        podcasts, and social platforms &mdash; 72 documented, URL-backed mentions and counting,
+        podcasts, and social platforms, 72 documented, URL-backed mentions and counting,
         and an entry in the OECD's AI Incidents Monitor.
       </p>
 
@@ -129,27 +148,37 @@
       </div>
 
       <div class="press-grid" data-reveal>
-        <a class="press-card" href="https://www.bleepingcomputer.com/news/security/clean-github-repo-tricks-ai-coding-agents-into-running-malware/" target="_blank" rel="noopener">
+        <a class="press-card"
+          href="https://www.bleepingcomputer.com/news/security/clean-github-repo-tricks-ai-coding-agents-into-running-malware/"
+          target="_blank" rel="noopener">
           <span class="outlet">BleepingComputer <span class="arrow">&#x2197;</span></span>
           <span class="outlet-type">Security news</span>
         </a>
-        <a class="press-card" href="https://www.securityweek.com/new-attack-abuses-claude-code-and-harmless-looking-repositories-to-hijack-developer-machines/" target="_blank" rel="noopener">
+        <a class="press-card"
+          href="https://www.securityweek.com/new-attack-abuses-claude-code-and-harmless-looking-repositories-to-hijack-developer-machines/"
+          target="_blank" rel="noopener">
           <span class="outlet">SecurityWeek <span class="arrow">&#x2197;</span></span>
           <span class="outlet-type">Security news</span>
         </a>
-        <a class="press-card" href="https://www.tomshardware.com/tech-industry/cyber-security/ai-coding-agents-can-be-tricked-into-installing-malware-via-clean-github-repositories-mozillas-0din-team-shows-how-claude-code-can-be-exploited-by-its-own-helpfulness" target="_blank" rel="noopener">
+        <a class="press-card"
+          href="https://www.tomshardware.com/tech-industry/cyber-security/ai-coding-agents-can-be-tricked-into-installing-malware-via-clean-github-repositories-mozillas-0din-team-shows-how-claude-code-can-be-exploited-by-its-own-helpfulness"
+          target="_blank" rel="noopener">
           <span class="outlet">Tom's Hardware <span class="arrow">&#x2197;</span></span>
           <span class="outlet-type">Technical news</span>
         </a>
-        <a class="press-card" href="https://www.helpnetsecurity.com/2026/06/29/mozilla-warns-of-indirect-prompt-injection-risk-in-ai-coding-agents/" target="_blank" rel="noopener">
+        <a class="press-card"
+          href="https://www.helpnetsecurity.com/2026/06/29/mozilla-warns-of-indirect-prompt-injection-risk-in-ai-coding-agents/"
+          target="_blank" rel="noopener">
           <span class="outlet">Help Net Security <span class="arrow">&#x2197;</span></span>
           <span class="outlet-type">Security news</span>
         </a>
-        <a class="press-card" href="https://cybersecuritynews.com/new-claude-code-attack/" target="_blank" rel="noopener">
+        <a class="press-card" href="https://cybersecuritynews.com/new-claude-code-attack/" target="_blank"
+          rel="noopener">
           <span class="outlet">Cyber Security News <span class="arrow">&#x2197;</span></span>
           <span class="outlet-type">Security news</span>
         </a>
-        <a class="press-card" href="https://korben.info/en/clean-github-repo-hijack-claude-code.html" target="_blank" rel="noopener">
+        <a class="press-card" href="https://korben.info/en/clean-github-repo-hijack-claude-code.html" target="_blank"
+          rel="noopener">
           <span class="outlet">Korben <span class="arrow">&#x2197;</span></span>
           <span class="outlet-type">Tech blog</span>
         </a>
@@ -222,4 +251,5 @@
   </script>
 
 </body>
+
 </html>
