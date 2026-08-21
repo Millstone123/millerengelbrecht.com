@@ -5,31 +5,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="How I built a closed-loop AI red-team research harness with evaluation gates, duplicate suppression, refusal diagnostics, and a shared brain for cumulative learning.">
-  <title>How I Engineered a Closed-Loop AI Red-Teaming Research Harness -- Miller Engelbrecht</title>
+    content="How I got tired of repeating AI red-team tests and built a measured, file-backed research harness for authorized guardrail evaluation.">
+  <link rel="canonical" href="https://millerengelbrecht.com/posts/ai-red-team-prompt-harness.html">
+  <title>I Got Tired of Repeating AI Red-Team Tests, So I Built a Harness -- Miller Engelbrecht</title>
 
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://millerengelbrecht.com/posts/ai-red-team-prompt-harness.html">
-  <meta property="og:title" content="How I Engineered a Closed-Loop AI Red-Teaming Research Harness">
+  <meta property="og:title" content="I Got Tired of Repeating AI Red-Team Tests, So I Built a Harness">
   <meta property="og:description"
-    content="How I built an instrumented improvement loop for authorized AI guardrail research, with scoring, refusal diagnostics, duplicate suppression, and shared memory.">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="How I Engineered a Closed-Loop AI Red-Teaming Research Harness">
+    content="A practical write-up on the file-backed experiment loop I built for authorized AI guardrail research.">
+  <meta property="og:image" content="https://millerengelbrecht.com/posts/assets/closed-loop-harness.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="I Got Tired of Repeating AI Red-Team Tests, So I Built a Harness">
   <meta name="twitter:description"
-    content="How I built an instrumented improvement loop for authorized AI guardrail research, with scoring, refusal diagnostics, duplicate suppression, and shared memory.">
+    content="A practical write-up on the file-backed experiment loop I built for authorized AI guardrail research.">
+  <meta name="twitter:image" content="https://millerengelbrecht.com/posts/assets/closed-loop-harness.svg">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "How I Engineered a Closed-Loop AI Red-Teaming Research Harness",
+    "headline": "I Got Tired of Repeating AI Red-Team Tests, So I Built a Harness",
     "datePublished": "2026-06-05",
     "author": {
       "@type": "Person",
       "name": "Miller Engelbrecht",
       "url": "https://millerengelbrecht.com"
     },
-    "description": "A write-up on building a closed-loop AI red-team research harness for authorized guardrail testing, focused on evaluation loops, duplicate suppression, refusal diagnostics, and shared memory.",
+    "description": "A practical write-up on building a file-backed experiment loop for authorized AI guardrail testing, with evaluation gates, duplicate suppression, and refusal diagnostics.",
     "url": "https://millerengelbrecht.com/posts/ai-red-team-prompt-harness.html",
     "keywords": ["ai-security", "red-team", "prompt-engineering", "bug-bounty", "guardrails"]
   }
@@ -73,7 +76,7 @@
         </svg>
         writing
       </a>
-      <h1 class="post-title">How I Engineered a Closed-Loop AI Red-Teaming Research Harness</h1>
+      <h1 class="post-title">I Got Tired of Repeating AI Red-Team Tests, So I Built a Harness</h1>
       <div class="post-meta-row">
         <span>June 5, 2026</span>
         <span class="sep">·</span>
@@ -86,27 +89,25 @@
     <article class="post-body">
 
       <p>
-        Classic AI jail-breaking research can feel tedious at first. You write a prompt,
-        you test it against the model, you read the response, and you adjust. But after
-        many attempts where the output is just beneath your required threshold, the work
-        stops feeling like creativity and starts becoming frustrating. All the near misses,
-        partial refusals, and tiny word changes that you expect to make a difference start to
-        not actually move the result and you get stuck in a loop.
+        I kept running into the same problem during authorized AI red-team testing:
+        after enough attempts, I could no longer tell whether I was exploring a new
+        idea or just rewriting an old one. The work was becoming less like research
+        and more like trying to remember what I had already tried.
 
 
       </p>
 
       <p>
-        The harness I built changed that. It didn't get rid of the judgment,
-        it instead moved the repetitive measurement work out of my head and into
-        an automated loop that could score, reject and improve.
+        So I built a small harness to keep track of the repetitive parts. It scores
+        each candidate, records why it failed, rejects obvious duplicates, and carries
+        useful state into the next experiment. It did not remove judgment; it moved
+        the bookkeeping out of my head.
       </p>
 
       <p>
-        The important shift was not that AI writes better prompts than humans. The
-        important shift was that the human stopped being the scoring infrastructure.
-        The harness took over the bookkeeping, so I could focus on interpreting the
-        experiment.
+        The useful shift was not that AI suddenly became a better researcher than me.
+        It was that I stopped acting as the spreadsheet, memory file, and stopwatch.
+        I could spend more time interpreting the experiment and less time reconstructing it.
       </p>
 
       <div class="callout visual" data-reveal>
@@ -123,7 +124,7 @@
 
       <p>
         The system is a closed-loop harness for authorized guardrail research. It
-        takes jailbreaking rules, category definitions, prior attempts, invalid techniques,
+        takes scope and category definitions, prior attempts, invalid techniques,
         missing-term telemetry, and similarity constraints, then evaluates each new
         candidate as an experiment rather than a hunch.
       </p>
@@ -145,11 +146,11 @@
             evaluation</span>
         </div>
         <pre><code>scope + category definitions
-  -> prompt technique
-  -> leakage gate (no over use of references to refused concepts)
-  -> cosine novelty gate (no responses too similar to prior attempts)
-  -> target model call
+  -> generate candidate
+  -> leakage and duplicate gates
+  -> target-model test
   -> refusal and coverage diagnostics
+  -> human review
   -> shared-brain update
   -> mutate, catalog, or discard</code></pre>
       </div>
@@ -168,28 +169,34 @@
         of being a synonym-swapped copy of it.
       </p>
 
+      <p>
+        The implemented gates are deliberately separate: response coverage must clear
+        the configured pass threshold, prompt leakage is capped per category, and
+        duplicate checks compare candidates against both locked reference prompts and
+        the submitted catalog. Those are enforcement rules for this experiment, not
+        universal measures of model safety.
+      </p>
+
       <hr>
 
       <h2 id="brain">The shared brain</h2>
 
       <p>
-        The shared brain is the piece that brings it all together. Every run can
-        produce a score, but the score alone is not enough. The brain stores the
-        working techniques, invalid paths, hypotheses, observations, refusal
-        patterns, strongest candidates, and dead ends that should not be rediscovered
-        on the next session.
+        “Shared brain” is my shorthand for a file-backed experiment ledger. Every
+        run can produce a score, but the score alone is not enough. The ledger stores
+        working techniques, invalid paths, hypotheses, observations, refusal patterns,
+        strongest candidates, and dead ends that should not be rediscovered next session.
       </p>
 
       <p>
-        That changed the research dynamic. Instead of starting each session from a
-        blank chat window, the agent reads the current state of the work: what has
-        passed, what was rejected, what is out of scope, what needs refinement, and
-        which failure mode is currently blocking progress. The brain becomes the
-        continuity layer between experiments.
+        Instead of starting each session from a blank chat window, an agent reads the
+        current state of the work: what passed, what was rejected, what is out of
+        scope, what needs refinement, and which failure mode is blocking progress.
+        File locking keeps concurrent updates from overwriting one another.
       </p>
 
       <p>
-        It also gives the human reviewer a clean audit trail. I can see why a
+        It also gives the human reviewer an audit trail. I can see why a
         candidate was kept, why another one was discarded, what hypothesis motivated
         a change, and whether a later result actually improved the research frontier
         or merely repeated something already known.
@@ -206,8 +213,8 @@
       <h2 id="diagnostics">Refusals became telemetry</h2>
 
       <p>
-        A refusal used to be an annoying blockade that required skill and persistance to over come.
-        Now it became telemetry. When a candidate refused, I could compare it against nearby candidates that did not.
+        A refusal used to be an annoying blockade. Now it is telemetry. When a
+        candidate is refused, I can compare it against nearby candidates that were not.
         That made the difference concrete: maybe the request was semantically too
         direct, maybe the document form overfit to a sensitive pattern, maybe the
         model gave a long but sterile answer, or maybe it engaged but avoided one
@@ -277,7 +284,7 @@
       </p>
 
       <p>
-        The cosine checker changed that. The browser-side harness treats each
+        The cosine checker changed that. The harness treats each
         candidate as a sparse term-frequency vector rather than as prose. After
         tokenization and light normalization, each unique term becomes a dimension,
         and its count becomes the coordinate value. Similarity is then computed as
@@ -305,17 +312,15 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
         just because it has more words; if the same vocabulary appears in the same
         proportions, the angle stays small and the cosine score stays high. The gate
         is deliberately lexical rather than embedding-based because I wanted it to
-        catch template reuse, surface-level paraphrase, and "same technique, new
-        nouns" failure modes. If a candidate is too close to locked prompts or
-        catalogued techniques, it does not get to masquerade as novelty. The harness
-        is forced to search for structural distance: different document genres,
-        different sequencing, different pressure points, different ways of eliciting
-        coverage without dumping the scorer terms directly into the prompt.
+        catch template reuse and the "same technique, new nouns" failure mode. But
+        this is an important limitation: lexical cosine similarity is not semantic
+        similarity. A paraphrase can evade the gate, while two genuinely different
+        techniques can still share vocabulary. I treat the result as a cheap duplicate
+        filter, not proof that a candidate is novel.
       </p>
 
       <p>
-        Structural distance matters because it is the difference between more
-        examples and more knowledge. A new candidate should test a different
+        A useful candidate should test a different
         assumption about the model: a different document genre, sequencing strategy,
         refusal boundary, or coverage mechanism. The novelty gate made the loop
         adversarial in the useful way: it had to invent around its own memory.
@@ -354,13 +359,23 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
         interesting when it crosses the threshold while remaining structurally novel.
       </p>
 
+      <div class="callout" data-reveal>
+        <strong>The important caveat</strong>
+        <p class="callout-copy">
+          The score is a measurement aid, not a finding by itself. Keyword coverage is
+          only a proxy, refusal is not proof of security, and lexical similarity is not
+          semantic similarity. A human still decides whether a result is valid,
+          reproducible, in scope, and worth reporting.
+        </p>
+      </div>
+
       <hr>
 
       <h2 id="takeaway">Takeaway</h2>
 
       <p>
         The harness converted red-team iteration into a constrained optimization
-        problem with telemetry: coverage, refusal behavior, leakage, semantic
+        problem with telemetry: coverage, refusal behavior, leakage, lexical
         similarity, missing clusters, shared-brain state, and catalog history.
       </p>
 
@@ -381,8 +396,9 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
       <p style="font-size:0.86rem;color:var(--body);">
         Author note: I built this while working as an AI security researcher with
         40+ awarded findings across guardrail evaluation, agentic tooling, and
-        AI-security workflows, including a top-five position on the 0din.ai
-        leaderboard.
+        AI-security workflows, including a top-five position on the <a
+          href="https://0din.ai/researchers/69a3ecbe-f3be-4f8a-be1f-b4afadc26d2b" target="_blank"
+          rel="noopener">0din.ai leaderboard</a>.
       </p>
 
       <p style="font-size:0.78rem;color:var(--muted);font-family:var(--mono);">
