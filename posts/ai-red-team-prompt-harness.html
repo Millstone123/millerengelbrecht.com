@@ -89,22 +89,28 @@
     <article class="post-body">
 
       <p>
-        After enough AI red-team runs, I was spending more time babysitting the
-        process than doing the research. I kept circling the same ideas, rewriting
-        prompts I had already tried, and losing the useful lessons between sessions.
+        I got tired of doing the same AI red-team experiment over and over again.
+        You write a prompt. You send it to the model. It refuses, half-answers, or
+        gives you something that looks promising until you actually read it. Then
+        you change three words, run it again, and pretend that this time will be different.
+
+        Usually, it isn't.
       </p>
 
       <p>
-        So I built an AI harness to take care of the repetitive work and generate the
-        prompts for me. It runs the loop end to end: generate, test, score, reject
-        duplicates, record failures, and feed the useful parts into the next run.
-        I set the rules; the harness does the grind.
+        After enough of this, I realised I wasn't spending most of my time researching.
+        I was spending it remembering what I had already tried. So I built an AI harness
+        to take care of the whole repetitive loop and generate the prompts for me. It
+        creates candidates, tests them, scores the responses, rejects duplicates, records
+        failures, and feeds the useful information into the next run.
+
+        I set the rules. The harness does the grinding.
       </p>
 
       <p>
-        That changed the feel of the work completely. Instead of manually nudging
-        one prompt at a time, I could watch an actual research loop explore the space,
-        learn from its dead ends, and bring the strongest candidates back to me for review.
+        That was the point. Not to pretend that an AI agent had replaced the researcher,
+        but to stop wasting human attention on the parts of the process that feel like
+        maintaining a spreadsheet with a caffeine addiction.
       </p>
 
       <div class="callout visual" data-reveal>
@@ -120,20 +126,20 @@
       <h2 id="harness">The research harness</h2>
 
       <p>
-        The system is a closed-loop harness for authorized guardrail research. It
-        takes scope and category definitions, prior attempts, invalid techniques,
-        missing-term telemetry, and similarity constraints, then evaluates each new
-        candidate as an experiment rather than a hunch.
+        Here is what I actually built. The system is a closed-loop harness for authorized
+        guardrail research. It takes the scope, category definitions, previous attempts,
+        invalid techniques, missing-term telemetry, and similarity constraints, then
+        evaluates each new candidate as an experiment rather than a hunch.
       </p>
 
       <p>
-        I was inspired by the same basic idea behind Andrej Karpathy's <a
+        I borrowed the basic idea from Andrej Karpathy's <a
           href="https://github.com/karpathy/autoresearch" target="_blank" rel="noopener">autoresearch</a>:
-        give an agent a bounded experiment loop, a fixed metric, and a rule for
-        keeping or discarding changes. In my case the artifact was not a training
-        file. It was a red-team candidate, and the metric was whether the model
-        output crossed the relevant threshold without devolving into duplication,
-        keyword leakage, or invalid outputs.
+        autoresearch: give an agent a bounded experiment loop, a fixed metric, and a
+        rule for keeping or discarding changes. In my case, the artifact was not a
+        training file. It was a red-team candidate. The question was simple enough:
+        did the result cross the threshold without turning into a duplicate, leaking
+        the answer into the prompt, or wandering outside the rules?
       </p>
 
       <div class="terminal" data-reveal>
@@ -159,19 +165,18 @@
       </figure>
 
       <p>
-        The result is a closed feedback loop: generate, evaluate, inspect, mutate,
-        and remember. It is not pretending to be fully autonomous research. It is an
-        evaluation harness that converts each failed attempt into structured
-        feedback, so the next iteration is informed by the previous response instead
-        of being a synonym-swapped copy of it.
+        This is the bit that matters. Every failed attempt becomes information for the
+        next attempt. The system is not conducting Nobel-prize-winning autonomous
+        research. It is doing something much more useful: stopping me from making the
+        exact same mistake with a different adjective.
       </p>
 
       <p>
-        The implemented gates are deliberately separate: response coverage must clear
-        the configured pass threshold, prompt leakage is capped per category, and
-        duplicate checks compare candidates against both locked reference prompts and
-        the submitted catalog. Those are enforcement rules for this experiment, not
-        universal measures of model safety.
+        The gates are deliberately separate. Response coverage has to clear the configured
+        threshold. Prompt leakage is capped per category. Duplicate checks compare new
+        candidates against both locked reference prompts and the submitted catalogue.
+        These rules are useful for this experiment. They are not a universal definition
+        of model safety, and anyone claiming otherwise is selling you something.
       </p>
 
       <hr>
@@ -179,24 +184,25 @@
       <h2 id="brain">The shared brain</h2>
 
       <p>
-        “Shared brain” is my shorthand for a file-backed experiment ledger. Every
-        run can produce a score, but the score alone is not enough. The ledger stores
+        I call the file-backed experiment ledger the “shared brain”. That sounds more
+        impressive than “a folder full of markdown files”, but the name is deserved.
+        Every run can produce a score. The score alone is not enough. The ledger stores
         working techniques, invalid paths, hypotheses, observations, refusal patterns,
         strongest candidates, and dead ends that should not be rediscovered next session.
       </p>
 
       <p>
-        Instead of starting each session from a blank chat window, an agent reads the
-        current state of the work: what passed, what was rejected, what is out of
-        scope, what needs refinement, and which failure mode is blocking progress.
-        File locking keeps concurrent updates from overwriting one another.
+        Why does that matter? Because starting every session from a blank chat window is
+        a ridiculous way to run an experiment. The agent reads what passed, what was
+        rejected, what is out of scope, what needs refinement, and which failure mode is
+        currently blocking progress. File locking keeps multiple agents from trampling
+        each other's updates.
       </p>
 
       <p>
-        It also gives the human reviewer an audit trail. I can see why a
-        candidate was kept, why another one was discarded, what hypothesis motivated
-        a change, and whether a later result actually improved the research frontier
-        or merely repeated something already known.
+        It also gives me an audit trail. I can see why a candidate was kept, why another
+        one was discarded, what hypothesis motivated a change, and whether a later result
+        actually improved the work or merely repeated something I had already seen.
       </p>
 
       <figure class="post-figure" data-reveal>
@@ -210,12 +216,11 @@
       <h2 id="diagnostics">Refusals became telemetry</h2>
 
       <p>
-        A refusal used to be an annoying blockade. Now it is telemetry. When a
-        candidate is refused, I can compare it against nearby candidates that were not.
-        That made the difference concrete: maybe the request was semantically too
-        direct, maybe the document form overfit to a sensitive pattern, maybe the
-        model gave a long but sterile answer, or maybe it engaged but avoided one
-        critical cluster.
+        A refusal used to be an annoying blockade. Now it is telemetry. When a candidate
+        is refused, I can compare it with the nearby candidates that were not. That makes
+        the difference concrete. Was the request too direct? Did the document format
+        trip a sensitive pattern? Did the model produce a long, sterile safety lecture?
+        Or did it engage while quietly avoiding the one cluster that mattered?
       </p>
 
       <div style="overflow-x:auto;margin:0 0 32px;" data-reveal>
@@ -256,10 +261,9 @@
       </div>
 
       <p>
-        This is the part that changed how I thought about the model. I was not seeing
-        private reasoning, but I was seeing behavioral instrumentation: refusal
-        signatures, avoidance patterns, weak categories, stable output habits, and
-        the formats that caused the model to retreat.
+        I am not seeing private reasoning. I am seeing behaviour. Refusal signatures,
+        avoidance patterns, weak categories, stable output habits, and the formats that
+        make the model retreat. That is still useful information.
       </p>
 
       <hr>
@@ -267,21 +271,21 @@
       <h2 id="duplicates">Duplicates were the trap</h2>
 
       <p>
-        Earlier versions of this kind of tooling drifted toward sameness. The system
-        would produce candidates that looked new only because the keywords changed.
-        The underlying technique was identical: the same rhetorical move, the same
-        output demand, the same exploit path wearing a different label.
+        This is where the first versions went wrong. The system produced candidates
+        that looked new because the keywords changed. The underlying technique was
+        identical: the same rhetorical move, the same output demand, the same path
+        wearing a different label.
       </p>
 
       <p>
         That is a dangerous failure mode because it looks like research. The archive
-        grows, the run count increases, the dashboard fills with variants, but the
-        actual search frontier barely moves. I was no longer exploring model behavior, but sampling
-        the same local optimum with different synonyms.
+        grows, the run count increases, and the dashboard fills with variants. Meanwhile,
+        the actual search frontier has barely moved. Congratulations, you have automated
+        the act of going in circles.
       </p>
 
       <p>
-        The cosine checker changed that. The harness treats each
+        The cosine checker helped with that. The harness treats each
         candidate as a sparse term-frequency vector rather than as prose. After
         tokenization and light normalization, each unique term becomes a dimension,
         and its count becomes the coordinate value. Similarity is then computed as
@@ -308,19 +312,18 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
         That normalization is the point. A longer candidate does not become novel
         just because it has more words; if the same vocabulary appears in the same
         proportions, the angle stays small and the cosine score stays high. The gate
-        is deliberately lexical rather than embedding-based because I wanted it to
-        catch template reuse and the "same technique, new nouns" failure mode. But
-        this is an important limitation: lexical cosine similarity is not semantic
-        similarity. A paraphrase can evade the gate, while two genuinely different
-        techniques can still share vocabulary. I treat the result as a cheap duplicate
-        filter, not proof that a candidate is novel.
+        The gate is deliberately lexical rather than embedding-based. That makes it
+        cheap and easy to inspect, which I like. It also means it has limitations.
+        Lexical cosine similarity is not semantic similarity. A paraphrase can evade
+        the gate, while two genuinely different techniques can still share vocabulary.
+        I treat it as a cheap duplicate filter, not a genius novelty detector.
       </p>
 
       <p>
-        A useful candidate should test a different
-        assumption about the model: a different document genre, sequencing strategy,
-        refusal boundary, or coverage mechanism. The novelty gate made the loop
-        adversarial in the useful way: it had to invent around its own memory.
+        A useful candidate should test a different assumption about the model: a different
+        document genre, sequencing strategy, refusal boundary, or coverage mechanism.
+        That is the useful kind of adversarial behaviour. The loop has to find a new route
+        instead of putting a moustache on the old one.
       </p>
 
       <figure class="post-figure" data-reveal>
@@ -335,25 +338,24 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
       <h2 id="practice">What changed in practice</h2>
 
       <p>
-        The main benefit was not speed by itself. Faster bad iteration is still bad
-        iteration. The useful gain was clarity: I could tell whether a change
-        improved the experiment, duplicated a known pattern, moved only the metric,
-        or produced a result that looked impressive but was not valid.
+        The main benefit was not speed. Faster bad iteration is still bad iteration.
+        The useful gain was clarity. I could tell whether a change improved the
+        experiment, duplicated a known pattern, moved only the metric, or produced
+        something that looked impressive but was not valid.
       </p>
 
       <p>
-        It also changed how I used models while building. The useful lesson was not
-        that a frontier model could be coaxed into helping with a sensitive workflow.
-        The lesson was that the model was far more useful when constrained by the
-        harness: fixed gates, explicit scope, saved failures, and a shared brain that
-        forced continuity between sessions.
+        It also changed how I used models while building. The lesson was not that a
+        frontier model had suddenly become my research assistant. The lesson was that
+        the model became much more useful when it had fixed gates, explicit scope,
+        saved failures, and a shared brain forcing continuity between sessions.
       </p>
 
       <p>
-        The harness gave me a way to explain results with more precision. Instead of
-        saying "this prompt worked," I could say: this technique avoids refusal here,
-        loses coverage there, duplicates that prior family, and only becomes
-        interesting when it crosses the threshold while remaining structurally novel.
+        The harness also gave me a better way to explain results. Instead of saying
+        “this prompt worked”, I could say: this technique avoids refusal here, loses
+        coverage there, duplicates that prior family, and only becomes interesting
+        when it crosses the threshold without becoming a copy of something else.
       </p>
 
       <div class="callout" data-reveal>
@@ -371,21 +373,21 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
       <h2 id="takeaway">Takeaway</h2>
 
       <p>
-        The harness converted red-team iteration into a constrained optimization
-        problem with telemetry: coverage, refusal behavior, leakage, lexical
-        similarity, missing clusters, shared-brain state, and catalog history.
+        The harness turned red-team iteration into a constrained optimisation problem
+        with telemetry: coverage, refusal behaviour, leakage, lexical similarity,
+        missing clusters, shared-brain state, and catalogue history.
       </p>
 
       <p>
-        It did not replace human judgment. It removed the part of the human workflow
-        that was acting like a spreadsheet, a memory file, and a stopwatch. The human
-        still decides what is valid, what is reportable, and what should be discarded.
+        It did not replace human judgement. It removed the part of my workflow that
+        was acting like a spreadsheet, a memory file, and a stopwatch. I still decide
+        what is valid, what is reportable, and what should be thrown away.
       </p>
 
       <p>
-        The old workflow was write, test, squint, rewrite. The new workflow is
-        scope, generate, gate, evaluate, diagnose, write to the shared brain, mutate,
-        deduplicate, catalog. It is less romantic, but it is much closer to research.
+        The old workflow was write, test, squint, rewrite. The new workflow is scope,
+        generate, gate, evaluate, diagnose, write to the shared brain, mutate,
+        deduplicate, catalogue. It is less romantic. It is also much closer to research.
       </p>
 
       <hr>
