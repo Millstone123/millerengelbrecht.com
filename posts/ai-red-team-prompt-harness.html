@@ -26,7 +26,7 @@
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": "How I Automated AI Jailbreak Testing",
-    "datePublished": "2026-06-05",
+    "datePublished": "2026-08-21",
     "author": {
       "@type": "Person",
       "name": "Miller Engelbrecht",
@@ -78,7 +78,7 @@
       </a>
       <h1 class="post-title">How I Automated AI Jailbreak Testing</h1>
       <div class="post-meta-row">
-        <span>June 5, 2026</span>
+        <span>August 21, 2026</span>
         <span class="sep">·</span>
         <span>ai-security</span>
         <span class="sep">·</span>
@@ -89,12 +89,16 @@
     <article class="post-body">
 
       <p>
-        I got tired of doing the same AI red-team experiment over and over again.
-        You write a prompt. You send it to the model. It refuses, half-answers, or
-        gives you something that looks promising until you actually read it. Then
-        you change three words, run it again, and pretend that this time will be different.
+        Jailbreaking is a skill that is learnt over experience and time, and it can be
+        very difficult and frustrating. You write a prompt. You send it to the model.
+        It refuses, half-answers, or gives you something that looks promising until you
+        actually read it. Then you change three words, run it again, and pretend that
+        this time will be different.
 
         Usually, it isn't.
+
+        Jailbreaking got me thinking about that old saying: “Insanity is doing the same
+        thing over and over and expecting different results.”
       </p>
 
       <p>
@@ -110,7 +114,9 @@
       <p>
         That was the point. Not to pretend that an AI agent had replaced the researcher,
         but to stop wasting human attention on the parts of the process that feel like
-        maintaining a spreadsheet with a caffeine addiction.
+        maintaining a spreadsheet with a caffeine addiction. Instead of getting a
+        successful jailbreak every couple of days, I can now get candidate prompts within
+        minutes.
       </p>
 
       <div class="callout visual" data-reveal>
@@ -127,19 +133,18 @@
 
       <p>
         Here is what I actually built. The system is a closed-loop harness for authorized
-        guardrail research. It takes the scope, category definitions, previous attempts,
-        invalid techniques, missing-term telemetry, and similarity constraints, then
-        evaluates each new candidate as an experiment rather than a hunch.
+        guardrail research. It takes the scope, previous jailbreaks, invalid techniques,
+        and similarity constraints, then evaluates each new candidate as an experiment
+        rather than a hunch.
       </p>
 
       <p>
         I borrowed the basic idea from Andrej Karpathy's <a
           href="https://github.com/karpathy/autoresearch" target="_blank" rel="noopener">autoresearch</a>:
-        autoresearch: give an agent a bounded experiment loop, a fixed metric, and a
-        rule for keeping or discarding changes. In my case, the artifact was not a
-        training file. It was a red-team candidate. The question was simple enough:
-        did the result cross the threshold without turning into a duplicate, leaking
-        the answer into the prompt, or wandering outside the rules?
+        Give an agent a bounded experiment loop, a fixed metric, and a
+        rule for keeping or discarding changes. The question was simple enough: did the
+        result cross the threshold without turning into a duplicate, leaking the answer
+        into the prompt, or wandering outside the rules?
       </p>
 
       <div class="terminal" data-reveal>
@@ -166,9 +171,9 @@
 
       <p>
         This is the bit that matters. Every failed attempt becomes information for the
-        next attempt. The system is not conducting Nobel-prize-winning autonomous
-        research. It is doing something much more useful: stopping me from making the
-        exact same mistake with a different adjective.
+        next attempt. All that information gets recorded and analysed instead of being
+        forgotten, which means I do not have to make the same mistake or try the same
+        tactic twice.
       </p>
 
       <p>
@@ -186,9 +191,10 @@
       <p>
         I call the file-backed experiment ledger the “shared brain”. That sounds more
         impressive than “a folder full of markdown files”, but the name is deserved.
-        Every run can produce a score. The score alone is not enough. The ledger stores
-        working techniques, invalid paths, hypotheses, observations, refusal patterns,
-        strongest candidates, and dead ends that should not be rediscovered next session.
+        The ledger stores working techniques, invalid paths, hypotheses, observations,
+        refusal patterns, strongest candidates, and dead ends that should not be
+        rediscovered next session. It is basically the part of my brain that remembers
+        what happened when I am too tired to do it myself.
       </p>
 
       <p>
@@ -273,8 +279,8 @@
       <p>
         This is where the first versions went wrong. The system produced candidates
         that looked new because the keywords changed. The underlying technique was
-        identical: the same rhetorical move, the same output demand, the same path
-        wearing a different label.
+        identical: the same rhetorical move, the same output demand, using the same
+        style and format with a different label.
       </p>
 
       <p>
@@ -312,7 +318,7 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
         That normalization is the point. A longer candidate does not become novel
         just because it has more words; if the same vocabulary appears in the same
         proportions, the angle stays small and the cosine score stays high. The gate
-        The gate is deliberately lexical rather than embedding-based. That makes it
+        is deliberately lexical rather than embedding-based. That makes it
         cheap and easy to inspect, which I like. It also means it has limitations.
         Lexical cosine similarity is not semantic similarity. A paraphrase can evade
         the gate, while two genuinely different techniques can still share vocabulary.
@@ -373,21 +379,22 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
       <h2 id="takeaway">Takeaway</h2>
 
       <p>
-        The harness turned red-team iteration into a constrained optimisation problem
-        with telemetry: coverage, refusal behaviour, leakage, lexical similarity,
-        missing clusters, shared-brain state, and catalogue history.
+        The harness removed the most mundane part of the job. It now handles the
+        coverage checks, refusal behaviour, leakage, lexical similarity, missing
+        clusters, shared-brain state, and catalogue history while I focus on the
+        parts that actually require judgement.
       </p>
 
       <p>
-        It did not replace human judgement. It removed the part of my workflow that
-        was acting like a spreadsheet, a memory file, and a stopwatch. I still decide
-        what is valid, what is reportable, and what should be thrown away.
+        I still decide what is valid, what is reportable, and what should be thrown away.
+        The machine can generate prompts all day, but it does not get to decide whether
+        the result is worth anything.
       </p>
 
       <p>
         The old workflow was write, test, squint, rewrite. The new workflow is scope,
         generate, gate, evaluate, diagnose, write to the shared brain, mutate,
-        deduplicate, catalogue. It is less romantic. It is also much closer to research.
+        deduplicate, catalogue. It is less romantic, but it is much more successful.
       </p>
 
       <hr>
