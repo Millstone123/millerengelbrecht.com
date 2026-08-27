@@ -89,22 +89,21 @@
     <article class="post-body">
 
       <p>
-        Jailbreaking is a skill that is learnt over experience and time, and it can be
-        very difficult and frustrating. You write a prompt. You send it to the model.
-        It refuses, half-answers, or gives you something that looks promising until you
-        actually read it. Then you change three words, run it again, and pretend that
-        this time will be different.
+        Jailbreaking takes time to learn. It can also be brutally frustrating. You write
+        a prompt. You send it to the model. It refuses, half-answers, or gives you
+        something that looks promising until you actually read it. Then you change
+        three words, run it again, and pretend that this time will be different.
 
         Usually, it isn't.
 
-        Jailbreaking got me thinking about that old saying: “Insanity is doing the same
-        thing over and over and expecting different results.”
+        It kept bringing me back to that old saying: “Insanity is doing the same thing
+        over and over and expecting different results.”
       </p>
 
       <p>
         After enough of this, I realised I wasn't spending most of my time researching.
-        I was spending it remembering what I had already tried. So I built an AI harness
-        to take care of the whole repetitive loop and generate the prompts for me. It
+        I was spending it remembering what I had already tried. That is why I built an
+        AI harness to take care of the whole repetitive loop and generate the prompts for me. It
         creates candidates, tests them, scores the responses, rejects duplicates, records
         failures, and feeds the useful information into the next run.
 
@@ -112,11 +111,10 @@
       </p>
 
       <p>
-        That was the point. Not to pretend that an AI agent had replaced the researcher,
-        but to stop wasting human attention on the parts of the process that feel like
-        maintaining a spreadsheet with a caffeine addiction. Instead of getting a
-        successful jailbreak every couple of days, I can now get candidate prompts within
-        minutes.
+        That was the point. I wasn't trying to pretend an AI agent had replaced the
+        researcher. I wanted to stop wasting human attention on work that felt like
+        maintaining a spreadsheet with a caffeine addiction. Instead of waiting days
+        for a promising candidate, I can now generate and test prompts within minutes.
       </p>
 
       <div class="callout visual" data-reveal>
@@ -132,7 +130,7 @@
       <h2 id="harness">The research harness</h2>
 
       <p>
-        Here is what I actually built. The system is a closed-loop harness for authorized
+        Here is what I actually built. The system is a closed-loop harness for authorised
         guardrail research. It takes the scope, previous jailbreaks, invalid techniques,
         and similarity constraints, then evaluates each new candidate as an experiment
         rather than a hunch.
