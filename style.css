@@ -665,6 +665,15 @@ a { text-decoration: none; color: inherit; }
 
 .post-meta-row .sep { color: var(--border-strong); }
 
+.post-dek {
+  max-width: 680px;
+  margin: 0 0 26px;
+  color: var(--muted) !important;
+  font-size: 1.05rem !important;
+  line-height: 1.6 !important;
+  font-style: italic;
+}
+
 /* ─── ARTICLE BODY ─── */
 .post-body {
   padding: 40px 0 96px;

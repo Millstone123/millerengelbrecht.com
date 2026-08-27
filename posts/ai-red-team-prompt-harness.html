@@ -80,6 +80,8 @@
       <div class="post-meta-row">
         <span>August 21, 2026</span>
         <span class="sep">·</span>
+        <span>8 min read</span>
+        <span class="sep">·</span>
         <span>ai-security</span>
         <span class="sep">·</span>
         <span>red-team</span>
@@ -88,33 +90,38 @@
 
     <article class="post-body">
 
-      <p>
-        Jailbreaking takes time to learn. It can also be brutally frustrating. You write
-        a prompt. You send it to the model. It refuses, half-answers, or gives you
-        something that looks promising until you actually read it. Then you change
-        three words, run it again, and pretend that this time will be different.
-
-        Usually, it isn't.
-
-        It kept bringing me back to that old saying: “Insanity is doing the same thing
-        over and over and expecting different results.”
+      <p class="post-dek">
+        What changed when I stopped treating jailbreak research as a sequence of
+        one-off prompts and started treating it as an instrumented experiment.
       </p>
 
       <p>
-        After enough of this, I realised I wasn't spending most of my time researching.
-        I was spending it remembering what I had already tried. That is why I built an
-        AI harness to take care of the whole repetitive loop and generate the prompts for me. It
-        creates candidates, tests them, scores the responses, rejects duplicates, records
-        failures, and feeds the useful information into the next run.
+        Jailbreak testing has a deceptively repetitive workflow. You write a prompt,
+        send it to the model, read the response, and adjust. At first, that feels like
+        research. After a while, it feels like trying to remember which version of the
+        same idea you have already tested.
 
-        I set the rules. The harness does the grinding.
+        The model refuses, half-answers, or produces something that looks promising
+        until you read it closely. Then you change three words and run it again. The
+        old saying applies: insanity is doing the same thing over and over and expecting
+        different results.
       </p>
 
       <p>
-        That was the point. I wasn't trying to pretend an AI agent had replaced the
+        I realised I was spending more time managing the process than doing the research.
+        That is why I built an AI harness to generate prompts for me and run the
+        repetitive loop end to end. It creates candidates, tests them, scores the
+        responses, rejects duplicates, records failures, and feeds the useful information
+        into the next run.
+
+        I set the rules. The harness does the grinding. I get the time back.
+      </p>
+
+      <p>
+        That was the point. I was not trying to pretend an AI agent had replaced the
         researcher. I wanted to stop wasting human attention on work that felt like
-        maintaining a spreadsheet with a caffeine addiction. Instead of waiting days
-        for a promising candidate, I can now generate and test prompts within minutes.
+        maintaining a spreadsheet with a caffeine addiction. The result is a faster
+        feedback cycle and a clearer record of what the experiments actually taught me.
       </p>
 
       <div class="callout visual" data-reveal>
