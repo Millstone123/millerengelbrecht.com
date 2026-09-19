@@ -248,34 +248,26 @@
 
       <hr>
 
-      <h2 id="duplicates">Duplicates were the trap</h2>
+      <h2 id="duplicates">Duplicate detection</h2>
 
       <p>
-        This is where the first versions went wrong. The system produced candidates
-        that looked new because the keywords changed. The underlying technique was
-        identical: the same rhetorical move, the same output demand, using the same
-        style and format with a different label.
+        Early runs produced prompts with different wording but the same underlying
+        technique. The harness uses lexical cosine similarity to screen candidates
+        against locked reference prompts and the submitted catalogue.
       </p>
 
       <p>
-        The archive kept growing, which made it easy to overestimate how much new
-        ground the tests covered. I needed a way to catch some of those repeats before
-        spending more time reviewing them.
-      </p>
-
-      <p>
-        The cosine checker helped with that. The harness treats each
-        candidate as a sparse term-frequency vector rather than as prose. After
-        tokenization and light normalization, each unique term becomes a dimension,
-        and its count becomes the coordinate value. Similarity is then computed as
-        the normalized dot product:
+        Each prompt is tokenized and lightly normalized, then represented as a sparse
+        term-frequency vector. Each term is a dimension; its occurrence count is the
+        value. Cosine similarity is the dot product of two vectors divided by the
+        product of their lengths:
       </p>
 
       <pre><code>cos(theta) = dot(a, b) / (||a|| * ||b||)
            = sum(a_i * b_i) / (sqrt(sum(a_i^2)) * sqrt(sum(b_i^2)))</code></pre>
 
       <p>
-        In code, that becomes a counter comparison over the shared vocabulary:
+        The calculation over the shared vocabulary is:
       </p>
 
       <pre><code>for (const key of keys) {
@@ -288,17 +280,15 @@
 return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
 
       <p>
-        If the same vocabulary appears in the same proportions, the cosine score
-        stays high even when the text is longer. I chose a lexical check because it
-        is cheap and easy to inspect. It has clear limits: paraphrases can receive low
-        similarity scores, and different techniques can share enough vocabulary to
-        receive high ones. I use it as a lexical duplicate filter. Whether a candidate
-        represents a different technique still needs review.
+        Similar word-frequency distributions produce scores close to 1. Repeating
+        the same vocabulary in the same proportions leaves the score unchanged.
+        The filter uses the configured similarity threshold to screen for duplicates.
       </p>
 
       <p>
-        Passing this filter only means that a candidate falls below the lexical
-        similarity threshold. It does not establish that the underlying technique is new.
+        This measures lexical overlap. Paraphrases can score low, while different
+        techniques that share vocabulary can score high. Candidates that pass still
+        need review for duplication at the technique level.
       </p>
 
       <figure class="post-figure" data-reveal>
@@ -310,49 +300,34 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
 
       <hr>
 
-      <h2 id="practice">What changed in practice</h2>
+      <h2 id="practice">Reviewing results</h2>
 
       <p>
-        The main benefit for me was being able to review the experiments more clearly.
-        I could check whether a change duplicated a known pattern, moved only the
-        metric, or produced a result that held up under review.
-      </p>
-
-      <p>
-        The saved record also made results easier to explain. I could point to the
-        response, the coverage score, the duplicate check, and my review notes rather
-        than relying on my recollection of a test.
+        I review the response alongside its coverage score, duplicate check, and
+        review notes. These records let me compare tests and trace why a candidate
+        was kept or discarded.
       </p>
 
       <div class="callout" data-reveal>
-        <strong>The important caveat</strong>
+        <strong>Evaluation limits</strong>
         <p class="callout-copy">
-          These scores have limited meanings. Keyword presence can overstate substantive
-          coverage, a refusal in one test leaves other behaviour unexamined, and lexical
-          similarity measures wording. Human review checks whether a result is valid,
-          reproducible, in scope, and worth reporting.
-      </p>
+          Keyword coverage measures term presence, and cosine similarity measures
+          lexical overlap. Neither establishes a valid finding. Review still checks
+          the response for a policy violation, scope, and reproducibility.
+        </p>
       </div>
 
       <hr>
 
-      <h2 id="takeaway">Takeaway</h2>
+      <h2 id="takeaway">Summary</h2>
 
       <p>
-        The harness now handles the repetitive checks and record-keeping, and the
-        shared brain lets me pick up the work across sessions. I still review candidates
-        and decide which results are valid and worth reporting.
+        The harness automates testing, scoring, duplicate checks, and record-keeping.
+        The shared brain preserves research state across sessions. I review the
+        recorded evidence and decide which findings to report.
       </p>
 
       <hr>
-
-      <p style="font-size:0.86rem;color:var(--body);">
-        Author note: I built this while working as an AI security researcher with
-        40+ awarded findings across guardrail evaluation, agentic tooling, and
-        AI-security workflows, including a top-five position on the <a
-          href="https://0din.ai/researchers/69a3ecbe-f3be-4f8a-be1f-b4afadc26d2b" target="_blank"
-          rel="noopener">0din.ai leaderboard</a>.
-      </p>
 
       <p style="font-size:0.78rem;color:var(--muted);font-family:var(--mono);">
         Testing discussed here was conducted in authorized AI guardrail bug-bounty contexts.
