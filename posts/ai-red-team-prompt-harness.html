@@ -184,20 +184,17 @@
       </p>
 
       <p>
-        My tests include the <strong>illicit-substance creation</strong> and
-        <strong>harmful-substance creation</strong> categories. I use the coverage
-        score to help review the response, then read it to judge whether it actually
-        violates the policy being tested. A refusal or general discussion of the
-        subject does not count as a successful jailbreak just because it contains
-        relevant keywords. An ambiguous response needs further review. A response
-        that appears to cross the policy boundary is a candidate finding until I
-        have checked its scope and reproducibility.
+        I test <strong>illicit-substance creation</strong> and
+        <strong>harmful-substance creation</strong>. Coverage scores help me triage
+        responses; I then review them for policy violations, scope, and reproducibility.
+        Relevant keywords alone do not make a successful jailbreak.
       </p>
 
       <p>
-        This distinction matters when describing a &ldquo;good&rdquo; jailbreak result:
-        I mean credible evidence of a policy failure. Keyword presence alone does
-        not establish that a response is complete or that its claims are correct.
+        The model generating the jailbreaks also kept taking shortcuts. It would
+        load the prompt with answer material or disguise JEF keywords with altered
+        spellings. I treated these as contaminated tests, even when they scored well:
+        the response could be repeating material already supplied in the prompt.
       </p>
 
       <p>
