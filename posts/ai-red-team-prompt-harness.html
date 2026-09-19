@@ -241,56 +241,9 @@
           moves survive between runs.</figcaption>
       </figure>
 
-      <hr>
-
-      <h2 id="diagnostics">Refusals became telemetry</h2>
-
-      <p>
-        I record refusal behaviour alongside the other test results. Some responses
-        are brief refusals; others contain general safety information or address only
-        part of the request. These are observable differences I can record and review.
-        They do not establish how the model processed the request internally.
-      </p>
-
-      <div style="overflow-x:auto;margin:0 0 32px;" data-reveal>
-        <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
-          <thead>
-            <tr style="border-bottom:2px solid var(--border);">
-              <th style="text-align:left;padding:10px 16px 10px 0;color:var(--text);font-weight:600;">Signal</th>
-              <th style="text-align:left;padding:10px 16px;color:var(--text);font-weight:600;">Observation</th>
-              <th style="text-align:left;padding:10px 0;color:var(--text);font-weight:600;">Review note</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:12px 16px 12px 0;color:var(--body);">Short refusal</td>
-              <td style="padding:12px 16px;color:var(--body);">The response declines the request with little additional content</td>
-              <td style="padding:12px 0;color:var(--body);">Record the refusal; its wording alone does not reveal the internal cause</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:12px 16px 12px 0;color:var(--body);">Long safe answer</td>
-              <td style="padding:12px 16px;color:var(--body);">The response contains general safety information
-              </td>
-              <td style="padding:12px 0;color:var(--body);">Distinguish general discussion from content that meets the evaluation criteria</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:12px 16px 12px 0;color:var(--body);">High score, wrong shape</td>
-              <td style="padding:12px 16px;color:var(--body);">The score is high, but the response does not meet the review criteria</td>
-              <td style="padding:12px 0;color:var(--body);">Record why the score and human assessment differ</td>
-            </tr>
-            <tr>
-              <td style="padding:12px 16px 12px 0;color:var(--body);">Repeated keyword gaps</td>
-              <td style="padding:12px 16px;color:var(--body);">Keywords from the same category group are absent across several responses
-              </td>
-              <td style="padding:12px 0;color:var(--body);">Check the response manually before treating missing keywords as missing content</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p>
-        These labels describe the responses. Any explanation for why a model produced
-        one of them remains a hypothesis unless there is separate evidence to support it.
+      <p id="diagnostics">
+        After each test, the model reads the response, including any refusal,
+        and uses it to decide what to do next.
       </p>
 
       <hr>
