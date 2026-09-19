@@ -96,32 +96,18 @@
       </p>
 
       <p>
-        Jailbreak testing has a deceptively repetitive workflow. You write a prompt,
-        send it to the model, read the response, and adjust. At first, that feels like
-        research. After a while, it feels like trying to remember which version of the
-        same idea you have already tested.
-
-        The model refuses, half-answers, or produces something that looks promising
-        until you read it closely. Then you change three words and run it again. The
-        old saying applies: insanity is doing the same thing over and over and expecting
-        different results.
+        Jailbreak testing involves a lot of repetition. I would write a prompt,
+        send it to the model, read the response, and adjust. As the tests accumulated,
+        I found it harder to remember which versions I had already tried and why
+        I had moved on from them.
       </p>
 
       <p>
         I realised I was spending more time managing the process than doing the research.
-        That is why I built an AI harness to generate prompts for me and run the
-        repetitive loop end to end. It creates candidates, tests them, scores the
-        responses, rejects duplicates, records failures, and feeds the useful information
-        into the next run.
-
-        I set the rules. The harness does the grinding. I get the time back.
-      </p>
-
-      <p>
-        That was the point. I was not trying to pretend an AI agent had replaced the
-        researcher. I wanted to stop wasting human attention on work that felt like
-        maintaining a spreadsheet with a caffeine addiction. The result is a faster
-        feedback cycle and a clearer record of what the experiments actually taught me.
+        That is why I built an AI harness to generate prompts and run the repetitive
+        parts of the loop. It creates candidates, tests them, scores the responses,
+        checks for duplicates, records failures, and carries that information into
+        the next run. I set the evaluation rules and review the results.
       </p>
 
       <div class="callout visual" data-reveal>
@@ -129,7 +115,7 @@
         <p class="callout-copy">
           The harness turns a one-off attempt into a measured cycle: evaluate,
           diagnose, write state, mutate, and test again.
-        </p>
+      </p>
       </div>
 
       <hr>
@@ -137,10 +123,9 @@
       <h2 id="harness">The research harness</h2>
 
       <p>
-        Here is what I actually built. The system is a closed-loop harness for authorised
-        guardrail research. It takes the scope, previous jailbreaks, invalid techniques,
-        and similarity constraints, then evaluates each new candidate as an experiment
-        rather than a hunch.
+        The system is a closed-loop harness for authorised guardrail research.
+        It takes the scope, previous tests, invalid techniques, and similarity
+        constraints, then evaluates each candidate against those rules.
       </p>
 
       <p>
@@ -175,18 +160,30 @@
       </figure>
 
       <p>
-        This is the bit that matters. Every failed attempt becomes information for the
-        next attempt. All that information gets recorded and analysed instead of being
-        forgotten, which means I do not have to make the same mistake or try the same
-        tactic twice.
+        The harness records failed attempts alongside the results I keep. That gives
+        me a record to check before spending more time on something I have already tried.
       </p>
 
       <p>
-        The gates are deliberately separate. Response coverage has to clear the configured
-        threshold. Prompt leakage is capped per category. Duplicate checks compare new
-        candidates against both locked reference prompts and the submitted catalogue.
-        These rules are useful for this experiment. They are not a universal definition
-        of model safety, and anyone claiming otherwise is selling you something.
+        The gates check different things. <strong>Keyword coverage</strong> measures
+        how much of a predefined set of category-related keywords appears in the response.
+        It is a rough indicator of topic coverage; a high score alone does not establish
+        that the response is accurate, complete, or a valid finding.
+      </p>
+
+      <p>
+        <strong>Prompt leakage</strong>, as I use the term here, means that the prompt
+        already contains keywords or answer material that the evaluation is looking for
+        in the response. A model repeating that material could inflate the coverage score.
+        This check concerns answer material supplied in the input, rather than disclosure
+        of a hidden system prompt.
+      </p>
+
+      <p>
+        Response coverage has to clear the configured threshold, and prompt leakage
+        is capped per category. Duplicate checks compare candidates against both
+        locked reference prompts and the submitted catalogue. These are checks for
+        this experiment, with human review still needed to interpret the results.
       </p>
 
       <hr>
@@ -194,20 +191,16 @@
       <h2 id="brain">The shared brain</h2>
 
       <p>
-        I call the file-backed experiment ledger the “shared brain”. That sounds more
-        impressive than “a folder full of markdown files”, but the name is deserved.
-        The ledger stores working techniques, invalid paths, hypotheses, observations,
-        refusal patterns, strongest candidates, and dead ends that should not be
-        rediscovered next session. It is basically the part of my brain that remembers
-        what happened when I am too tired to do it myself.
+        I call the file-backed experiment ledger the <strong>shared brain</strong>.
+        It is a collection of markdown files that preserves research state across
+        sessions and agents. The shared brain stores working techniques, invalid paths,
+        hypotheses, observations, refusal patterns, strongest candidates, and dead ends.
       </p>
 
       <p>
-        Why does that matter? Because starting every session from a blank chat window is
-        a ridiculous way to run an experiment. The agent reads what passed, what was
-        rejected, what is out of scope, what needs refinement, and which failure mode is
-        currently blocking progress. File locking keeps multiple agents from trampling
-        each other's updates.
+        At the start of a session, the agent reads the shared brain to see what passed,
+        what was rejected, what is out of scope, and what still needs review.
+        File locking helps prevent concurrent agents from overwriting each other's updates.
       </p>
 
       <p>
@@ -227,11 +220,10 @@
       <h2 id="diagnostics">Refusals became telemetry</h2>
 
       <p>
-        A refusal used to be an annoying blockade. Now it is telemetry. When a candidate
-        is refused, I can compare it with the nearby candidates that were not. That makes
-        the difference concrete. Was the request too direct? Did the document format
-        trip a sensitive pattern? Did the model produce a long, sterile safety lecture?
-        Or did it engage while quietly avoiding the one cluster that mattered?
+        I record refusal behaviour alongside the other test results. Some responses
+        are brief refusals; others contain general safety information or address only
+        part of the request. These are observable differences I can record and review.
+        They do not establish how the model processed the request internally.
       </p>
 
       <div style="overflow-x:auto;margin:0 0 32px;" data-reveal>
@@ -239,42 +231,40 @@
           <thead>
             <tr style="border-bottom:2px solid var(--border);">
               <th style="text-align:left;padding:10px 16px 10px 0;color:var(--text);font-weight:600;">Signal</th>
-              <th style="text-align:left;padding:10px 16px;color:var(--text);font-weight:600;">What it tells me</th>
-              <th style="text-align:left;padding:10px 0;color:var(--text);font-weight:600;">Next move</th>
+              <th style="text-align:left;padding:10px 16px;color:var(--text);font-weight:600;">Observation</th>
+              <th style="text-align:left;padding:10px 0;color:var(--text);font-weight:600;">Review note</th>
             </tr>
           </thead>
           <tbody>
             <tr style="border-bottom:1px solid var(--border);">
               <td style="padding:12px 16px 12px 0;color:var(--body);">Short refusal</td>
-              <td style="padding:12px 16px;color:var(--body);">The model classified the request before engaging with the
-                task</td>
-              <td style="padding:12px 0;color:var(--body);">Change the frame, not the adjectives</td>
+              <td style="padding:12px 16px;color:var(--body);">The response declines the request with little additional content</td>
+              <td style="padding:12px 0;color:var(--body);">Record the refusal; its wording alone does not reveal the internal cause</td>
             </tr>
             <tr style="border-bottom:1px solid var(--border);">
               <td style="padding:12px 16px 12px 0;color:var(--body);">Long safe answer</td>
-              <td style="padding:12px 16px;color:var(--body);">The model engaged, but routed into generic safety content
+              <td style="padding:12px 16px;color:var(--body);">The response contains general safety information
               </td>
-              <td style="padding:12px 0;color:var(--body);">Tighten the output contract</td>
+              <td style="padding:12px 0;color:var(--body);">Distinguish general discussion from content that meets the evaluation criteria</td>
             </tr>
             <tr style="border-bottom:1px solid var(--border);">
               <td style="padding:12px 16px 12px 0;color:var(--body);">High score, wrong shape</td>
-              <td style="padding:12px 16px;color:var(--body);">The metric moved, but the finding is not valid</td>
-              <td style="padding:12px 0;color:var(--body);">Mark the technique as a dead end</td>
+              <td style="padding:12px 16px;color:var(--body);">The score is high, but the response does not meet the review criteria</td>
+              <td style="padding:12px 0;color:var(--body);">Record why the score and human assessment differ</td>
             </tr>
             <tr>
-              <td style="padding:12px 16px 12px 0;color:var(--body);">Repeated missing cluster</td>
-              <td style="padding:12px 16px;color:var(--body);">The prompt is not pulling one side of the category space
+              <td style="padding:12px 16px 12px 0;color:var(--body);">Repeated keyword gaps</td>
+              <td style="padding:12px 16px;color:var(--body);">Keywords from the same category group are absent across several responses
               </td>
-              <td style="padding:12px 0;color:var(--body);">Rewrite toward that gap without keyword dumping</td>
+              <td style="padding:12px 0;color:var(--body);">Check the response manually before treating missing keywords as missing content</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <p>
-        I am not seeing private reasoning. I am seeing behaviour. Refusal signatures,
-        avoidance patterns, weak categories, stable output habits, and the formats that
-        make the model retreat. That is still useful information.
+        These labels describe the responses. Any explanation for why a model produced
+        one of them remains a hypothesis unless there is separate evidence to support it.
       </p>
 
       <hr>
@@ -289,10 +279,9 @@
       </p>
 
       <p>
-        That is a dangerous failure mode because it looks like research. The archive
-        grows, the run count increases, and the dashboard fills with variants. Meanwhile,
-        the actual search frontier has barely moved. Congratulations, you have automated
-        the act of going in circles.
+        The archive kept growing, which made it easy to overestimate how much new
+        ground the tests covered. I needed a way to catch some of those repeats before
+        spending more time reviewing them.
       </p>
 
       <p>
@@ -320,28 +309,24 @@
 return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
 
       <p>
-        That normalization is the point. A longer candidate does not become novel
-        just because it has more words; if the same vocabulary appears in the same
-        proportions, the angle stays small and the cosine score stays high. The gate
-        is deliberately lexical rather than embedding-based. That makes it
-        cheap and easy to inspect, which I like. It also means it has limitations.
-        Lexical cosine similarity is not semantic similarity. A paraphrase can evade
-        the gate, while two genuinely different techniques can still share vocabulary.
-        I treat it as a cheap duplicate filter, not a genius novelty detector.
+        If the same vocabulary appears in the same proportions, the cosine score
+        stays high even when the text is longer. I chose a lexical check because it
+        is cheap and easy to inspect. It has clear limits: paraphrases can receive low
+        similarity scores, and different techniques can share enough vocabulary to
+        receive high ones. I use it as a lexical duplicate filter. Whether a candidate
+        represents a different technique still needs review.
       </p>
 
       <p>
-        A useful candidate should test a different assumption about the model: a different
-        document genre, sequencing strategy, refusal boundary, or coverage mechanism.
-        That is the useful kind of adversarial behaviour. The loop has to find a new route
-        instead of putting a moustache on the old one.
+        Passing this filter only means that a candidate falls below the lexical
+        similarity threshold. It does not establish that the underlying technique is new.
       </p>
 
       <figure class="post-figure" data-reveal>
         <img src="assets/novelty-gate.svg"
-          alt="Cosine novelty gate diagram showing duplicate rejection and structurally novel candidates">
-        <figcaption>The novelty gate rejects false progress: candidates that only rename the same technique do not move
-          the research frontier.</figcaption>
+          alt="Lexical duplicate filter comparing candidate vocabulary against the catalogue">
+        <figcaption>The lexical duplicate filter screens for similar wording. Candidates that pass still need review
+          for repeated underlying techniques.</figcaption>
       </figure>
 
       <hr>
@@ -349,34 +334,25 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
       <h2 id="practice">What changed in practice</h2>
 
       <p>
-        The main benefit was not speed. Faster bad iteration is still bad iteration.
-        The useful gain was clarity. I could tell whether a change improved the
-        experiment, duplicated a known pattern, moved only the metric, or produced
-        something that looked impressive but was not valid.
+        The main benefit for me was being able to review the experiments more clearly.
+        I could check whether a change duplicated a known pattern, moved only the
+        metric, or produced a result that held up under review.
       </p>
 
       <p>
-        It also changed how I used models while building. The lesson was not that a
-        frontier model had suddenly become my research assistant. The lesson was that
-        the model became much more useful when it had fixed gates, explicit scope,
-        saved failures, and a shared brain forcing continuity between sessions.
-      </p>
-
-      <p>
-        The harness also gave me a better way to explain results. Instead of saying
-        “this prompt worked”, I could say: this technique avoids refusal here, loses
-        coverage there, duplicates that prior family, and only becomes interesting
-        when it crosses the threshold without becoming a copy of something else.
+        The saved record also made results easier to explain. I could point to the
+        response, the coverage score, the duplicate check, and my review notes rather
+        than relying on my recollection of a test.
       </p>
 
       <div class="callout" data-reveal>
         <strong>The important caveat</strong>
         <p class="callout-copy">
-          The score is a measurement aid, not a finding by itself. Keyword coverage is
-          only a proxy, refusal is not proof of security, and lexical similarity is not
-          semantic similarity. A human still decides whether a result is valid,
+          These scores have limited meanings. Keyword presence can overstate substantive
+          coverage, a refusal in one test leaves other behaviour unexamined, and lexical
+          similarity measures wording. Human review checks whether a result is valid,
           reproducible, in scope, and worth reporting.
-        </p>
+      </p>
       </div>
 
       <hr>
@@ -384,22 +360,9 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
       <h2 id="takeaway">Takeaway</h2>
 
       <p>
-        The harness removed the most mundane part of the job. It now handles the
-        coverage checks, refusal behaviour, leakage, lexical similarity, missing
-        clusters, shared-brain state, and catalogue history while I focus on the
-        parts that actually require judgement.
-      </p>
-
-      <p>
-        I still decide what is valid, what is reportable, and what should be thrown away.
-        The machine can generate prompts all day, but it does not get to decide whether
-        the result is worth anything.
-      </p>
-
-      <p>
-        The old workflow was write, test, squint, rewrite. The new workflow is scope,
-        generate, gate, evaluate, diagnose, write to the shared brain, mutate,
-        deduplicate, catalogue. It is less romantic, but it is much more successful.
+        The harness now handles the repetitive checks and record-keeping, and the
+        shared brain lets me pick up the work across sessions. I still review candidates
+        and decide which results are valid and worth reporting.
       </p>
 
       <hr>
@@ -424,7 +387,7 @@ return dot / (Math.sqrt(na) * Math.sqrt(nb));</code></pre>
         <span class="footer-name">Miller Engelbrecht</span>
       </div>
       <div class="footer-links">
-        <a href="mailto:miller.engelbrecht@gmail.com">Email</a>
+        <a href="https://discord.com/users/1101043484741353532" target="_blank" rel="noopener">Discord</a>
         <a href="https://www.linkedin.com/in/miller-engelbrecht-561731274" target="_blank" rel="noopener">LinkedIn</a>
         <a href="../index.html">Writing</a>
       </div>
