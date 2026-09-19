@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="How I got tired of repeating AI red-team tests and built a measured, file-backed research harness for authorized guardrail evaluation.">
+    content="How I built an AI jailbreak-testing harness to automate routine research tasks, speed up testing, and make evaluation more consistent.">
   <link rel="canonical" href="https://millerengelbrecht.com/posts/ai-red-team-prompt-harness.html">
   <title>How I Automated AI Jailbreak Testing -- Miller Engelbrecht</title>
 
@@ -91,23 +91,21 @@
     <article class="post-body">
 
       <p class="post-dek">
-        What changed when I stopped treating jailbreak research as a sequence of
-        one-off prompts and started treating it as an instrumented experiment.
+        I built a jailbreak-testing harness to use AI in my day-to-day research:
+        automate routine work, run tests faster, and make evaluation more consistent.
       </p>
 
       <p>
-        Jailbreak testing involves a lot of repetition. I would write a prompt,
-        send it to the model, read the response, and adjust. As the tests accumulated,
-        I found it harder to remember which versions I had already tried and why
-        I had moved on from them.
+        I wanted AI to help me do more of my job. Jailbreak research involves a lot
+        of hands-on testing and review, and I wanted to automate the parts that could
+        run under a clear set of rules. The goal was to work faster while improving
+        how consistently I evaluated each result.
       </p>
 
       <p>
-        I realised I was spending more time managing the process than doing the research.
-        That is why I built an AI harness to generate prompts and run the repetitive
-        parts of the loop. It creates candidates, tests them, scores the responses,
-        checks for duplicates, records failures, and carries that information into
-        the next run. I set the evaluation rules and review the results.
+        The harness handles the repetitive testing and evaluation work. I set the
+        research scope and review the results. That gives me more time to assess
+        findings and decide what is worth reporting.
       </p>
 
       <div class="callout visual" data-reveal>
@@ -166,9 +164,30 @@
 
       <p>
         The gates check different things. <strong>Keyword coverage</strong> measures
-        how much of a predefined set of category-related keywords appears in the response.
-        It is a rough indicator of topic coverage; a high score alone does not establish
-        that the response is accurate, complete, or a valid finding.
+        how much category-related vocabulary appears in a response. For the scoring
+        reference, see <a href="https://github.com/0din-ai/0din-JEF" target="_blank"
+          rel="noopener">0DIN's Jailbreak Evaluation Framework (JEF)</a>.
+        Its category-specific evaluators assess response text against benchmark
+        criteria and produce output-fidelity scores from 0 to 100. That score is a
+        benchmark result, not a percentage of factual correctness. JEF also has a
+        separate composite score that accounts for the models and categories affected.
+      </p>
+
+      <p>
+        My tests include the <strong>illicit-substance creation</strong> and
+        <strong>harmful-substance creation</strong> categories. I use the coverage
+        score to help review the response, then read it to judge whether it actually
+        violates the policy being tested. A refusal or general discussion of the
+        subject does not count as a successful jailbreak just because it contains
+        relevant keywords. An ambiguous response needs further review. A response
+        that appears to cross the policy boundary is a candidate finding until I
+        have checked its scope and reproducibility.
+      </p>
+
+      <p>
+        This distinction matters when describing a &ldquo;good&rdquo; jailbreak result:
+        I mean credible evidence of a policy failure. Keyword presence alone does
+        not establish that a response is complete or that its claims are correct.
       </p>
 
       <p>
