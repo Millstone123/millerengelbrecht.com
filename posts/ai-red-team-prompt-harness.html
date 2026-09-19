@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="How I built an AI jailbreak-testing harness to automate routine research tasks, speed up testing, and make evaluation more consistent.">
+    content="How I built an AI jailbreak research harness with help from Claude Opus 4.8 and a local Qwen3.8-27B model.">
   <link rel="canonical" href="https://millerengelbrecht.com/posts/ai-red-team-prompt-harness.html">
   <title>How I Automated AI Jailbreak Testing -- Miller Engelbrecht</title>
 
@@ -91,21 +91,31 @@
     <article class="post-body">
 
       <p class="post-dek">
-        I built a jailbreak-testing harness to use AI in my day-to-day research:
-        automate routine work, run tests faster, and make evaluation more consistent.
+        I kept seeing people build AI harnesses for vulnerability research.
+        I wanted to do the same for my jailbreak research.
       </p>
 
       <p>
-        I wanted AI to help me do more of my job. Jailbreak research involves a lot
-        of hands-on testing and review, and I wanted to automate the parts that could
-        run under a clear set of rules. The goal was to work faster while improving
-        how consistently I evaluated each result.
+        A lot of the discussion I came across was about using AI agents and pipelines
+        to find software vulnerabilities. I saw less about using them to help with
+        AI jailbreak research, which is where I wanted to put them to work.
+        Could I use AI to automate more of my own testing and do the job better?
       </p>
 
       <p>
-        The harness handles the repetitive testing and evaluation work. I set the
-        research scope and review the results. That gives me more time to assess
-        findings and decide what is worth reporting.
+        I convinced <a href="https://www.anthropic.com/news/claude-opus-4-8"
+          target="_blank" rel="noopener">Claude Opus 4.8</a> to help me develop
+        jailbreaks. I also used a local <a href="https://huggingface.co/Qwen/Qwen3.8-27B"
+          target="_blank" rel="noopener">Qwen3.8-27B</a> model, with 27 billion
+        parameters, to help with the work. I wanted to bring that assistance into
+        a harness I could use in my day-to-day research.
+      </p>
+
+      <p>
+        The goal was to run tests faster and make the evaluation more consistent,
+        while leaving me time to look closely at the results. This post covers the
+        harness I built, the checks I use, and the shared brain that carries the
+        work between sessions.
       </p>
 
       <div class="callout visual" data-reveal>
